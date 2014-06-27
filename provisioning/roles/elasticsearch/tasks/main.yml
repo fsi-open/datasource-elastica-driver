@@ -1,0 +1,9 @@
+---
+- name: download ElasticSearch package
+  get_url: url=https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb dest=~/elasticsearch.deb
+
+- name: Install ElasticSearch .deb file
+  shell: dpkg -i ~/elasticsearch.deb
+  sudo: true
+
+- service: name=elasticsearch state=started

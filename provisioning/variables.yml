@@ -1,0 +1,7 @@
+---
+# Project
+project_name: datasource-elastica.dev
+project_root: /var/www/datasource-elastica
+
+# Composer
+composer_download_url: https://getcomposer.org/composer.phar
