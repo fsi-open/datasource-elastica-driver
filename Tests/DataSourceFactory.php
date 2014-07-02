@@ -6,6 +6,7 @@ use Elastica\Client;
 use FSi\Component\DataSource\Driver\DriverFactoryManager;
 use FSi\Component\DataSource\Driver\Elastica\DriverFactory;
 use FSi\Component\DataSource\Driver\Elastica\Extension\Core\CoreDriverExtension;
+use FSi\Component\DataSource\Driver\Elastica\Extension\Indexing\IndexingDriverExtension;
 use FSi\Component\DataSource\Driver\Elastica\Extension\Ordering\OrderingDriverExtension;
 use FSi\Component\DataSource\Extension\Symfony;
 use FSi\Component\DataSource\Extension\Core;
@@ -24,6 +25,7 @@ class DataSourceFactory
         $driverExtensions = array(
             new CoreDriverExtension(),
             new OrderingDriverExtension(),
+            new IndexingDriverExtension(),
         );
 
         $driverFactoryManager = new DriverFactoryManager(

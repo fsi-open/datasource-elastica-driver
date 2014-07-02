@@ -1,15 +1,24 @@
 <?php
 
-namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\EventSubscriber;
+namespace FSi\Component\DataSource\Driver\Elastica\Extension\Indexing;
 
+use Elastica\ResultSet;
+use FSi\Component\DataSource\Driver\DriverAbstractExtension;
 use FSi\Component\DataSource\Driver\Elastica\Result;
-use FSi\Component\DataSource\Driver\Elastica\ResultSet;
-use FSi\Component\DataSource\Event\DriverEvent\ResultEventArgs;
 use FSi\Component\DataSource\Event\DriverEvents;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use FSi\Component\DataSource\Event\DriverEvent;
+use FSi\Component\DataSource\Event\DriverEvent\ResultEventArgs;
 
-class ResultIndexer implements EventSubscriberInterface
+class IndexingDriverExtension extends DriverAbstractExtension
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtendedDriverTypes()
+    {
+        return array('elastica');
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -23,7 +32,7 @@ class ResultIndexer implements EventSubscriberInterface
         $result = $event->getResult();
 
         if ($result instanceof ResultSet) {
-            $result = new Result($result->getResult());
+            $result = new Result($result);
             $event->setResult($result);
         }
     }

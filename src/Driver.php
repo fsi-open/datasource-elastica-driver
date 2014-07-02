@@ -92,7 +92,7 @@ class Driver extends DriverAbstract
 
         $resultSet = $this->searchable->search($this->query);
 
-        return new ResultSet($resultSet);
+        return $resultSet;
     }
 
     /**
