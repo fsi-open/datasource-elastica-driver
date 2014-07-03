@@ -23,8 +23,8 @@
     },
     "autoload": {
         "psr-4": {
-            "FSi\\Component\\DataSource\\Driver\\Elastica\\Tests\\": "Component-Tests/",
-            "FSi\\Component\\DataSource\\Driver\\Elastica\\": "Component-src/"
+            "FSi\\Component\\DataSource\\Driver\\Elastica\\Tests\\": "Tests/",
+            "FSi\\Component\\DataSource\\Driver\\Elastica\\": "src/"
         }
     },
     "config": {
