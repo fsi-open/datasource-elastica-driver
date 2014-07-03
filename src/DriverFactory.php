@@ -50,7 +50,7 @@ class DriverFactory implements DriverFactoryInterface
         $type = $this->client->getIndex($options['index'])
             ->getType($options['type']);
 
-        return new Driver($this->extensions, $type, $options['transformer']);
+        return new Driver($this->extensions, $type);
     }
 
     private function initOptions()
@@ -59,7 +59,6 @@ class DriverFactory implements DriverFactoryInterface
             array(
                 'index' => null,
                 'type' => null,
-                'transformer' => null,
             )
         );
 
@@ -67,7 +66,6 @@ class DriverFactory implements DriverFactoryInterface
             array(
                 'index' => array('string'),
                 'type' => array('string'),
-                'transformer' => array('null', 'object'),
             )
         );
     }

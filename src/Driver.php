@@ -32,22 +32,15 @@ class Driver extends DriverAbstract
     private $searchable;
 
     /**
-     * @var null
-     */
-    private $transformer;
-
-    /**
      * @param $extensions array with extensions
      * @param SearchableInterface              $searchable
-     * @param null                             $transformer
      * @throws \FSi\Component\DataSource\Exception\DataSourceException
      */
-    public function __construct($extensions, SearchableInterface $searchable, $transformer = null)
+    public function __construct($extensions, SearchableInterface $searchable)
     {
         parent::__construct($extensions);
 
         $this->searchable = $searchable;
-        $this->transformer = $transformer;
     }
 
     /**
@@ -101,14 +94,6 @@ class Driver extends DriverAbstract
     public function getType()
     {
         return 'elastica';
-    }
-
-    /**
-     * @return null
-     */
-    public function getTransformer()
-    {
-        return $this->transformer;
     }
 
     /**

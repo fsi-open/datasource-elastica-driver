@@ -25,9 +25,8 @@ class TransformResultTest extends \PHPUnit_Framework_TestCase
 
         $datasource = new DataSource(
             new Driver(
-                array(new TransformDriverExtension()),
-                $searchable,
-                new Transformer()
+                array(new TransformDriverExtension(new Transformer())),
+                $searchable
             ),
             'test'
         );

@@ -136,7 +136,7 @@ xxx.datasource.elastica_driver.transformer_proxy:
 
 xxx.datasource.elastica_driver.result_indexer:
     class: FSi\Component\DataSource\Driver\Elastica\Extension\Indexing\TransformDriverExtension
-    # arguments: [@mnk.datasource.elastica_driver.elastica_to_model_transformer]
+    arguments: [@xxx.datasource.elastica_driver.transformer_proxy]
     tags:
         - {name: datasource.driver.elastica.subscriber, alias: result_indexer}
 ```

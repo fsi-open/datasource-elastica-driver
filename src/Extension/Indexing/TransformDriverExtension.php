@@ -5,11 +5,22 @@ namespace FSi\Component\DataSource\Driver\Elastica\Extension\Indexing;
 use Elastica\ResultSet;
 use FSi\Component\DataSource\Driver\DriverAbstractExtension;
 use FSi\Component\DataSource\Driver\Elastica\ResultToModelTransformer;
+use FSi\Component\DataSource\Driver\Elastica\TransformerInterface;
 use FSi\Component\DataSource\Event\DriverEvents;
 use FSi\Component\DataSource\Event\DriverEvent\ResultEventArgs;
 
 class TransformDriverExtension extends DriverAbstractExtension
 {
+    /**
+     * @var \FSi\Component\DataSource\Driver\Elastica\TransformerInterface
+     */
+    private $transformer;
+
+    public function __construct(TransformerInterface $transformer)
+    {
+        $this->transformer = $transformer;
+    }
+
     public function getExtendedDriverTypes()
     {
         return array('elastica');
@@ -26,11 +37,9 @@ class TransformDriverExtension extends DriverAbstractExtension
     public function postGetResult(ResultEventArgs $event)
     {
         $result = $event->getResult();
-        /** @var \FSi\Component\DataSource\Driver\Elastica\Driver $driver */
-        $driver = $event->getDriver();
 
         if ($result instanceof ResultSet) {
-            $result = new ResultToModelTransformer($driver->getTransformer(), $result);
+            $result = new ResultToModelTransformer($this->transformer, $result);
             $event->setResult($result);
         }
     }
