@@ -51,7 +51,6 @@ Service definition (`elastica-driver.xml`):
                 -->
                 <argument type="service" id="datasource.driver.elastica.extension" />
             </argument>
-            <argument type="service" id="fos_elastica.client" />
             <tag name="datasource.driver.factory"/>
         </service>
 

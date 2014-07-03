@@ -11,10 +11,10 @@ class DriverFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testDriverCreation()
     {
-        $factory = new DriverFactory(array(), new Client());
+        $factory = new DriverFactory(array());
         $this->assertTrue($factory instanceof DriverFactoryInterface);
 
-        $driver = $factory->createDriver(array('index' => 'test', 'type' => 'test'));
+        $driver = $factory->createDriver(array('searchable' => $this->getMock('\Elastica\SearchableInterface')));
         $this->assertTrue($driver instanceof DriverAbstract);
     }
 }

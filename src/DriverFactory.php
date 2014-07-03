@@ -2,7 +2,6 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica;
 
-use Elastica\Client;
 use FSi\Component\DataSource\Driver\DriverFactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -18,18 +17,12 @@ class DriverFactory implements DriverFactoryInterface
      */
     private $extensions;
 
-    /**
-     * @var \Elastica\Client
-     */
-    private $client;
-
-    public function __construct(array $extensions, Client $client)
+    public function __construct(array $extensions)
     {
         $this->extensions = $extensions;
         $this->optionsResolver = new OptionsResolver();
 
         $this->initOptions();
-        $this->client = $client;
     }
 
     /**
@@ -47,25 +40,20 @@ class DriverFactory implements DriverFactoryInterface
     {
         $options = $this->optionsResolver->resolve($options);
 
-        $type = $this->client->getIndex($options['index'])
-            ->getType($options['type']);
-
-        return new Driver($this->extensions, $type);
+        return new Driver($this->extensions, $options['searchable']);
     }
 
     private function initOptions()
     {
         $this->optionsResolver->setDefaults(
             array(
-                'index' => null,
-                'type' => null,
+                'searchable' => null,
             )
         );
 
         $this->optionsResolver->setAllowedTypes(
             array(
-                'index' => array('string'),
-                'type' => array('string'),
+                'searchable' => array('\Elastica\SearchableInterface'),
             )
         );
     }

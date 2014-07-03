@@ -38,7 +38,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
         $dataSourceFactory = new DataSourceFactory();
         $this->dataSource = $dataSourceFactory->getDataSourceFactory()->createDataSource(
             'elastica',
-            array('index' => 'datetime_index', 'type' => 'datetime_type')
+            array('searchable' => $type)
         );
     }
 

@@ -38,7 +38,7 @@ class BooleanTest extends \PHPUnit_Framework_TestCase
         $dataSourceFactory = new DataSourceFactory();
         $this->dataSource = $dataSourceFactory->getDataSourceFactory()->createDataSource(
             'elastica',
-            array('index' => 'text_index', 'type' => 'text_type')
+            array('searchable' => $type)
         );
         $this->dataSource->addField('active', 'boolean', 'eq');
     }

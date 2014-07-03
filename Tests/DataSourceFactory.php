@@ -30,7 +30,7 @@ class DataSourceFactory
 
         $driverFactoryManager = new DriverFactoryManager(
             array(
-                new DriverFactory($driverExtensions, new Client())
+                new DriverFactory($driverExtensions)
             )
         );
 

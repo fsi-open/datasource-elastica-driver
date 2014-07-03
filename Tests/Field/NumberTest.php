@@ -38,7 +38,7 @@ class NumberTest extends \PHPUnit_Framework_TestCase
         $dataSourceFactory = new DataSourceFactory();
         $this->dataSource = $dataSourceFactory->getDataSourceFactory()->createDataSource(
             'elastica',
-            array('index' => 'number_index', 'type' => 'number_type')
+            array('searchable' => $type)
         );
     }
 

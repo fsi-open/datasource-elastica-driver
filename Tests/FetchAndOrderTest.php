@@ -38,7 +38,7 @@ class FetchAndOrderTest extends \PHPUnit_Framework_TestCase
         $dataSourceFactory = new DataSourceFactory();
         $this->dataSource = $dataSourceFactory->getDataSourceFactory()->createDataSource(
             'elastica',
-            array('index' => 'test_index', 'type' => 'test_type')
+            array('searchable' => $type)
         );
         $this->dataSource
             ->addField('surname', 'text', 'like')
