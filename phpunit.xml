@@ -12,7 +12,7 @@
 >
     <testsuites>
         <testsuite name="FSi Datasource Elastica">
-            <directory>Tests/</directory>
+            <directory>Component-Tests/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
