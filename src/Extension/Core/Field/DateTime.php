@@ -7,6 +7,7 @@ use Elastica\Filter\Range;
 use Elastica\Query;
 use Elastica\Query\Bool;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\Exception\DoctrineDriverException;
+use FSi\Component\DataSource\Driver\Elastica\DriverException;
 use FSi\Component\DataSource\Driver\Elastica\FieldInterface;
 
 class DateTime extends AbstractField implements FieldInterface
@@ -67,8 +68,7 @@ class DateTime extends AbstractField implements FieldInterface
                 )
             );
         } else {
-            // FIXME: proper exception
-            throw new DoctrineDriverException(sprintf('Unexpected comparison type ("%s").', $this->getComparison()));
+            throw new DriverException(sprintf('Unexpected comparison type ("%s").', $this->getComparison()));
         }
     }
 

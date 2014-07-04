@@ -4,6 +4,7 @@ namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
 use Elastica\Filter\AbstractMulti;
 use Elastica\Query\Bool;
+use FSi\Component\DataSource\Driver\Elastica\DriverException;
 use FSi\Component\DataSource\Field\FieldAbstractType;
 use Elastica\Filter\Range;
 use Elastica\Filter\Term;
@@ -74,7 +75,7 @@ abstract class AbstractField extends FieldAbstractType
                 );
                 break;
             default:
-                throw new DoctrineDriverException(
+                throw new DriverException(
                     sprintf('Unexpected comparison type ("%s").', $this->getComparison())
                 );
         }
