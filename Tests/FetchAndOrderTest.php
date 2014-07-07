@@ -6,16 +6,10 @@ use Elastica\Client;
 use Elastica\Document;
 use Elastica\Filter\Term;
 use Elastica\Query\Match;
-use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\Extension\Core\Ordering\OrderingExtension;
 
-class FetchAndOrderTest extends \PHPUnit_Framework_TestCase
+class FetchAndOrderTest extends BaseTest
 {
-    /**
-     * @var \FSi\Component\DataSource\DataSource
-     */
-    private $dataSource;
-
     /**
      * {@inheritdoc}
      */
@@ -150,14 +144,5 @@ class FetchAndOrderTest extends \PHPUnit_Framework_TestCase
         $result = $this->dataSource->getResult();
 
         $this->assertEquals(2, count($result));
-    }
-
-    private function parametersEnvelope(array $parameters)
-    {
-        return array(
-            $this->dataSource->getName() => array(
-                DataSourceInterface::PARAMETER_FIELDS => $parameters,
-            ),
-        );
     }
 }
