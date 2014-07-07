@@ -15,7 +15,7 @@ class DateTime extends AbstractField implements FieldInterface
     /**
      * {@inheritdoc}
      */
-    protected $comparisons = array('eq', /*'neg',*/ 'lt', 'lte', 'gt', 'gte', /*'in','notIn',*/ 'between'/*,'isNull'*/);
+    protected $comparisons = array('eq', 'lt', 'lte', 'gt', 'gte', 'between');
 
     protected function getFormat()
     {

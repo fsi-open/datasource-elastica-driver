@@ -11,14 +11,13 @@ use Elastica\Filter\Term;
 use Elastica\Filter\BoolNot;
 use Elastica\Filter\Terms;
 use Elastica\Query;
-use FSi\Component\DataSource\Driver\Doctrine\ORM\Exception\DoctrineDriverException;
 
 abstract class AbstractField extends FieldAbstractType
 {
     /**
      * {@inheritdoc}
      */
-    protected $comparisons = array('eq', 'neg', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'between'/*, 'isNull'*/);
+    protected $comparisons = array('eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'between');
 
     public function buildQuery(Bool $query, AbstractMulti $filter)
     {
@@ -36,7 +35,7 @@ abstract class AbstractField extends FieldAbstractType
 
                 $filter->addFilter($termFilter);
                 break;
-            case 'neg':
+            case 'neq':
                 $termFilter = new Term();
                 $termFilter->setTerm($fieldPath, $data);
 
