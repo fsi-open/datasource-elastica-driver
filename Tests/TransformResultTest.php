@@ -4,7 +4,7 @@ namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 
 use FSi\Component\DataSource\DataSource;
 use FSi\Component\DataSource\Driver\Elastica\Driver;
-use FSi\Component\DataSource\Driver\Elastica\Extension\Indexing\TransformDriverExtension;
+use FSi\Component\DataSource\Driver\Elastica\Extension\Transformation\TransformationDriverExtension;
 use FSi\Component\DataSource\Driver\Elastica\Tests\Fixtures\Transformer;
 
 class TransformResultTest extends \PHPUnit_Framework_TestCase
@@ -25,7 +25,7 @@ class TransformResultTest extends \PHPUnit_Framework_TestCase
 
         $datasource = new DataSource(
             new Driver(
-                array(new TransformDriverExtension(new Transformer())),
+                array(new TransformationDriverExtension(new Transformer())),
                 $searchable
             ),
             'test'

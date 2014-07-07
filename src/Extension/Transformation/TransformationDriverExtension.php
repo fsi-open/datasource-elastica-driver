@@ -1,6 +1,6 @@
 <?php
 
-namespace FSi\Component\DataSource\Driver\Elastica\Extension\Indexing;
+namespace FSi\Component\DataSource\Driver\Elastica\Extension\Transformation;
 
 use Elastica\ResultSet;
 use FSi\Component\DataSource\Driver\DriverAbstractExtension;
@@ -9,7 +9,7 @@ use FSi\Component\DataSource\Driver\Elastica\TransformerInterface;
 use FSi\Component\DataSource\Event\DriverEvents;
 use FSi\Component\DataSource\Event\DriverEvent\ResultEventArgs;
 
-class TransformDriverExtension extends DriverAbstractExtension
+class TransformationDriverExtension extends DriverAbstractExtension
 {
     /**
      * @var \FSi\Component\DataSource\Driver\Elastica\TransformerInterface
