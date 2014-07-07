@@ -3,7 +3,6 @@
 namespace FSi\Component\DataSource\Driver\Elastica;
 
 use Elastica\Filter\AbstractFilter;
-use Elastica\Filter\AbstractMulti;
 use Elastica\Filter\BoolAnd;
 use Elastica\Index;
 use Elastica\Query\AbstractQuery;
@@ -37,31 +36,38 @@ class Driver extends DriverAbstract
     /**
      * @var \Elastica\Query\AbstractQuery
      */
-    private $userQuery;
+    private $userSubQuery;
 
     /**
      * @var \Elastica\Filter\AbstractFilter
      */
     private $userFilter;
+    /**
+     * @var \Elastica\Query
+     */
+    private $masterQuery;
 
     /**
      * @param $extensions array with extensions
      * @param SearchableInterface $searchable
-     * @param AbstractQuery $userQuery
+     * @param AbstractQuery $userSubQuery
      * @param AbstractFilter $userFilter
+     * @param Query $masterQuery
      * @throws \FSi\Component\DataSource\Exception\DataSourceException
      */
     public function __construct(
         $extensions,
         SearchableInterface $searchable,
-        AbstractQuery $userQuery = null,
-        AbstractFilter $userFilter = null
+        AbstractQuery $userSubQuery = null,
+        AbstractFilter $userFilter = null,
+        Query $masterQuery = null
     ) {
         parent::__construct($extensions);
 
         $this->searchable = $searchable;
-        $this->userQuery = $userQuery;
+        $this->userSubQuery = $userSubQuery;
         $this->userFilter = $userFilter;
+        $this->masterQuery = $masterQuery;
     }
 
     /**
@@ -71,7 +77,7 @@ class Driver extends DriverAbstract
     {
         $this->subQueries = new Bool();
         $this->filters = new BoolAnd();
-        $this->query = new Query();
+        $this->query = ($this->masterQuery === null) ? new Query() : $this->masterQuery;
     }
 
     /**
@@ -93,8 +99,8 @@ class Driver extends DriverAbstract
             $field->buildQuery($this->subQueries, $this->filters);
         }
 
-        if ($this->userQuery !== null) {
-            $this->subQueries->addMust($this->userQuery);
+        if ($this->userSubQuery !== null) {
+            $this->subQueries->addMust($this->userSubQuery);
         }
 
         if ($this->subQueries->hasParam('should') || $this->subQueries->hasParam('must') ||

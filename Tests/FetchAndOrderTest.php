@@ -4,8 +4,6 @@ namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 
 use Elastica\Client;
 use Elastica\Document;
-use Elastica\Filter\Term;
-use Elastica\Query\Match;
 use FSi\Component\DataSource\Extension\Core\Ordering\OrderingExtension;
 
 class FetchAndOrderTest extends BaseTest
@@ -105,44 +103,5 @@ class FetchAndOrderTest extends BaseTest
         }
 
         $this->assertEquals($expectedIds, $actualIds);
-    }
-
-    public function testUseUserProvidedQueryAndFilter()
-    {
-
-        $matchQuery = new Match();
-        $matchQuery->setField('about', 'lorem');
-
-        $termFilter = new Term();
-        $termFilter->setTerm('active', true);
-
-        $client  = new Client();
-
-        $dataSourceFactory = new DataSourceFactory();
-        $this->dataSource = $dataSourceFactory->getDataSourceFactory()->createDataSource(
-            'elastica',
-            array(
-                'searchable' => $client->getIndex('test_index')->getType('test_type'),
-                'query' => $matchQuery,
-                'filter' => $termFilter,
-            )
-        );
-        $this->dataSource
-            ->addField('name', 'text', 'like')
-            ->addField('active', 'boolean', 'eq')
-            ->addField('salary', 'number', 'gte')
-            ->addField('about', 'text', 'like');
-
-        $this->dataSource->bindParameters(
-            $this->parametersEnvelope(
-                array(
-                    'name' => 'Jan',
-                    'salary' => 111111
-                )
-            )
-        );
-        $result = $this->dataSource->getResult();
-
-        $this->assertEquals(2, count($result));
     }
 }

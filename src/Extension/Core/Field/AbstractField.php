@@ -14,11 +14,6 @@ use Elastica\Query;
 
 abstract class AbstractField extends FieldAbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $comparisons = array('eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'between');
-
     public function buildQuery(Bool $query, AbstractMulti $filter)
     {
         $data = $this->getCleanParameter();
@@ -90,11 +85,12 @@ abstract class AbstractField extends FieldAbstractType
             ->setOptional(array('field'))
             ->setAllowedTypes(
                 array(
-                    'field' => array('string', 'null')
+                    'field' => array('string', 'null') //TODO: should allow array of strings
                 )
             )
             ->setNormalizers(
                 array(
+                    // TODO: remove!
                     'field' => function ($options, $value) use ($field) {
                         if (!empty($value)) {
                             return sprintf("%s.%s", $field->getName(), $value);
