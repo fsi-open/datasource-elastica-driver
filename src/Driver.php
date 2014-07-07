@@ -2,10 +2,13 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica;
 
+use Elastica\Filter\AbstractFilter;
+use Elastica\Filter\AbstractMulti;
 use Elastica\Filter\BoolAnd;
 use Elastica\Index;
-use Elastica\Query;
+use Elastica\Query\AbstractQuery;
 use Elastica\Query\Bool;
+use Elastica\Query;
 use Elastica\SearchableInterface;
 use FSi\Component\DataSource\Driver\DriverAbstract;
 
@@ -32,15 +35,33 @@ class Driver extends DriverAbstract
     private $searchable;
 
     /**
+     * @var \Elastica\Query\AbstractQuery
+     */
+    private $userQuery;
+
+    /**
+     * @var \Elastica\Filter\AbstractFilter
+     */
+    private $userFilter;
+
+    /**
      * @param $extensions array with extensions
-     * @param SearchableInterface              $searchable
+     * @param SearchableInterface $searchable
+     * @param AbstractQuery $userQuery
+     * @param AbstractFilter $userFilter
      * @throws \FSi\Component\DataSource\Exception\DataSourceException
      */
-    public function __construct($extensions, SearchableInterface $searchable)
-    {
+    public function __construct(
+        $extensions,
+        SearchableInterface $searchable,
+        AbstractQuery $userQuery = null,
+        AbstractFilter $userFilter = null
+    ) {
         parent::__construct($extensions);
 
         $this->searchable = $searchable;
+        $this->userQuery = $userQuery;
+        $this->userFilter = $userFilter;
     }
 
     /**
@@ -58,6 +79,10 @@ class Driver extends DriverAbstract
      */
     public function buildResult($fields, $from, $limit)
     {
+        if ($this->userFilter !== null) {
+            $this->filters->addFilter($this->userFilter);
+        }
+
         foreach ($fields as $field) {
             if (!$field instanceof FieldInterface) {
                 throw new \RuntimeException(
@@ -66,6 +91,10 @@ class Driver extends DriverAbstract
             }
 
             $field->buildQuery($this->subQueries, $this->filters);
+        }
+
+        if ($this->userQuery !== null) {
+            $this->subQueries->addMust($this->userQuery);
         }
 
         if ($this->subQueries->hasParam('should') || $this->subQueries->hasParam('must') ||

@@ -40,7 +40,7 @@ class DriverFactory implements DriverFactoryInterface
     {
         $options = $this->optionsResolver->resolve($options);
 
-        return new Driver($this->extensions, $options['searchable']);
+        return new Driver($this->extensions, $options['searchable'], $options['query'], $options['filter']);
     }
 
     private function initOptions()
@@ -48,12 +48,16 @@ class DriverFactory implements DriverFactoryInterface
         $this->optionsResolver->setDefaults(
             array(
                 'searchable' => null,
+                'query' => null,
+                'filter' => null,
             )
         );
 
         $this->optionsResolver->setAllowedTypes(
             array(
                 'searchable' => array('\Elastica\SearchableInterface'),
+                'query' => array('null', '\Elastica\Query\AbstractQuery'),
+                'filter' => array('null', '\Elastica\Filter\AbstractFilter'),
             )
         );
     }
