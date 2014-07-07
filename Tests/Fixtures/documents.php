@@ -9,7 +9,7 @@ return array(
         'timestamp' => '2014-06-01T23:01:16+0200',
         'active'    => true,
         'salary'    => 111111,
-        'about'     => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut volutpat magna a ligula posuere tempus.',
+        'about'     => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut volutpat magna a ligula posuere tempus. MarkA. MarkB',
     ),
     'p2' => array(
         'name'      => 'Jan',
@@ -19,7 +19,7 @@ return array(
         'timestamp' => '2014-06-02T22:02:16+0200',
         'active'    => false,
         'salary'    => 222222,
-        'about'     => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus semper id leo non semper. Aenean.',
+        'about'     => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus semper id leo non semper. Aenean. MarkA, MarkC',
     ),
     'p3' => array(
         'name'      => 'Janusz',
@@ -29,7 +29,7 @@ return array(
         'timestamp' => '2014-06-02T23:02:16+0200',
         'active'    => false,
         'salary'    => 222222,
-        'about'     => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dignissim ante. Aenean posuere condimentum.',
+        'about'     => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dignissim ante. Aenean posuere condimentum. MarkB. MarkD',
     ),
     'p4' => array(
         'name'      => 'Jan',

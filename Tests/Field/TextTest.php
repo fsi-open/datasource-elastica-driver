@@ -35,7 +35,7 @@ class TextTest extends BaseTest
             'elastica',
             array('searchable' => $type)
         );
-        $this->dataSource->addField('about', 'text', 'like');
+        $this->dataSource->addField('about', 'text', 'match');
     }
 
     public function testFilterByEmptyParameter()
@@ -62,5 +62,14 @@ class TextTest extends BaseTest
         $result = $this->filterDataSource(array('about' => 'lorem dolor'));
 
         $this->assertEquals(11, count($result));
+    }
+
+    public function testFindItemsByMultipleWordWithAndOperator()
+    {
+        $this->dataSource->clearFields();
+        $this->dataSource->addField('about', 'text', 'match', array('operator' => 'and'));
+        $result = $this->filterDataSource(array('about' => 'MarkA MarkC'));
+
+        $this->assertEquals(1, count($result));
     }
 }

@@ -35,10 +35,10 @@ class FetchAndOrderTest extends BaseTest
             array('searchable' => $type)
         );
         $this->dataSource
-            ->addField('surname', 'text', 'like')
+            ->addField('surname', 'text', 'match')
             ->addField('active', 'boolean', 'eq')
             ->addField('salary', 'number', 'gte')
-            ->addField('about', 'text', 'like');
+            ->addField('about', 'text', 'match');
     }
 
     public function testFetchingAllResults()

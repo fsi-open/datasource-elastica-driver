@@ -12,7 +12,7 @@ class Text extends AbstractField implements FieldInterface
     /**
      * {@inheritdoc}
      */
-    protected $comparisons = array('like');
+    protected $comparisons = array('match');
 
     public function buildQuery(Bool $query, AbstractMulti $filter)
     {
@@ -22,7 +22,8 @@ class Text extends AbstractField implements FieldInterface
         }
 
         $match = new Query\Match();
-        $match->setField($this->getField(), $data);
+        $match->setFieldQuery($this->getField(), $data);
+        $match->setFieldOperator($this->getField(), $this->getOption('operator'));
 
         $query->addMust($match);
     }
@@ -33,5 +34,22 @@ class Text extends AbstractField implements FieldInterface
     public function getType()
     {
         return 'text';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function initOptions()
+    {
+        parent::initOptions();
+
+        $this->getOptionsResolver()
+            ->setDefaults(array('operator' => 'or'))
+            ->addAllowedValues(
+                array(
+                    'operator' => array('or', 'and')
+                )
+            )
+        ;
     }
 }
