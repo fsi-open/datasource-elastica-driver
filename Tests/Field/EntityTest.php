@@ -25,7 +25,8 @@ class EntityTest extends BaseTest
 
         $documents = array();
         $fixtures = require(__DIR__ . '/../Fixtures/documents.php');
-        foreach ($fixtures as $id => $fixture) {
+        foreach ($fixtures as $id => &$fixture) {
+            $fixture['branch']['idx'] = $fixture['branch']['id'];
             $documents[] = new Document($id, $fixture);
         }
         $type->addDocuments($documents);
@@ -36,9 +37,7 @@ class EntityTest extends BaseTest
             'elastica',
             array('searchable' => $type)
         );
-        $this->dataSource->addField('branch', 'entity', 'eq', array(
-            'identifier_field' => 'id'
-        ));
+        $this->dataSource->addField('branch', 'entity', 'eq');
     }
 
     public function testFilterByEmptyParameter()
@@ -56,6 +55,17 @@ class EntityTest extends BaseTest
     public function testFindItemsByEntity()
     {
         $result = $this->filterDataSource(array('branch' => new Branch(2)));
+
+        $this->assertEquals(2, count($result));
+    }
+
+    public function testFindItemsByEntityWithNonStandardId()
+    {
+        $this->dataSource->clearFields();
+        $this->dataSource->addField('branch', 'entity', 'eq', array(
+            'identifier_field' => 'idx'
+        ));
+        $result = $this->filterDataSource(array('branch' => new Branch(null, 2)));
 
         $this->assertEquals(2, count($result));
     }

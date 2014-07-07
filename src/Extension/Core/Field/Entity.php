@@ -18,7 +18,7 @@ class Entity extends AbstractField implements FieldInterface
     public function buildQuery(Bool $query, AbstractMulti $filter)
     {
         $data = $this->getCleanParameter();
-        if ($data === array() || $data === '' || $data === null) {
+        if (empty($data)) {
             return;
         }
 
@@ -46,12 +46,12 @@ class Entity extends AbstractField implements FieldInterface
      */
     public function initOptions()
     {
+        parent::initOptions();
+
         $this->getOptionsResolver()
-            //->setRequired(array('identifier_field'))
-            ->setOptional(array('field', 'identifier_field'))
+            ->setDefaults(array('identifier_field' => 'id'))
             ->setAllowedTypes(
                 array(
-                    'field' => array('string', 'null'),
                     'identifier_field' => array('string')
                 )
             )
