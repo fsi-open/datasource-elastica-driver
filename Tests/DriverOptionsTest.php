@@ -11,6 +11,17 @@ use Elastica\Query\Match;
 
 class DriverOptionsTest extends BaseTest
 {
+    public function testFieldOptionInField()
+    {
+        $this->prepareDataSource();
+
+        $this->dataSource->clearFields();
+        $this->dataSource->addField('branch', 'number', 'eq', array('field' => 'branch.id'));
+
+        $result = $this->filterDataSource(array('branch' => 2));
+        $this->assertEquals(2, count($result));
+    }
+
     public function testUseUserProvidedQueryAndFilter()
     {
         $matchQuery = new Match();

@@ -85,15 +85,14 @@ abstract class AbstractField extends FieldAbstractType
             ->setOptional(array('field'))
             ->setAllowedTypes(
                 array(
-                    'field' => array('string', 'null') //TODO: should allow array of strings
+                    'field' => array('string', 'null')
                 )
             )
             ->setNormalizers(
                 array(
-                    // TODO: remove!
                     'field' => function ($options, $value) use ($field) {
                         if (!empty($value)) {
-                            return sprintf("%s.%s", $field->getName(), $value);
+                            return $value;
                         }
 
                         return $field->getName();
