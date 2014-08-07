@@ -27,7 +27,7 @@ class Entity extends AbstractField implements FieldInterface
 
         $filter->addFilter(
             new Filter\Terms(
-                sprintf("%s.%s", $this->getName(), $idFieldName),
+                sprintf("%s.%s", $this->getField(), $idFieldName),
                 array($accessor->getValue($data, $idFieldName))
             )
         );
