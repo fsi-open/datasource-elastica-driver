@@ -1,8 +1,8 @@
-# DataSource Elastica Bundle
+# DataSource Elastica Driver
 
 Experimental DataSource Driver for ElasticSearch
 
-## Usage in Symfony2 Application
+## Use in Symfony2 Application
 
 Service definition (`elastica-driver.xml`):
 
