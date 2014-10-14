@@ -12,6 +12,8 @@ use FSi\Component\DataSource\Extension\Symfony;
 use FSi\Component\DataSource\Extension\Core;
 use FSi\Component\DataSource\Extension\Core\Ordering\OrderingExtension;
 use FSi\Component\DataSource\DataSourceFactory as BaseDataSourceFactory;
+use Elastica\Client;
+use Elastica\Document;
 
 abstract class BaseTest extends \PHPUnit_Framework_TestCase
 {
@@ -63,6 +65,36 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
             $this->dataSource->getName() => array(
                 DataSourceInterface::PARAMETER_FIELDS => $parameters,
             ),
+        );
+    }
+
+    protected function prepareIndex($indexName, $typeName, $mapping = null, \Closure $transform = null)
+    {
+        $client  = new Client();
+        $index = $client->getIndex($indexName);
+        if ($index->exists()) {
+            $index->delete();
+        }
+        $index->create();
+        $type = $index->getType($typeName);
+        if (null !== $mapping && is_array($mapping)) {
+            $type->setMapping($mapping);
+        }
+
+        $documents = array();
+        $fixtures = require(__DIR__ . '/Fixtures/documents.php');
+        foreach ($fixtures as $id => $fixture) {
+            if (null !== $transform) {
+                $fixture = $transform($fixture);
+            }
+            $documents[] = new Document($id, $fixture);
+        }
+        $type->addDocuments($documents);
+        $index->flush(true);
+
+        return $this->getDataSourceFactory()->createDataSource(
+            'elastica',
+            array('searchable' => $type)
         );
     }
 }

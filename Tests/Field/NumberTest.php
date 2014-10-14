@@ -2,7 +2,9 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Tests\Field;
 
-class NumberTest extends BaseFieldTest
+use FSi\Component\DataSource\Driver\Elastica\Tests\BaseTest;
+
+class NumberTest extends BaseTest
 {
     /**
      * {@inheritdoc}

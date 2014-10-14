@@ -2,8 +2,6 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 
-use Elastica\Client;
-use Elastica\Document;
 use FSi\Component\DataSource\Extension\Core\Ordering\OrderingExtension;
 
 class FetchAndOrderTest extends BaseTest
@@ -13,26 +11,7 @@ class FetchAndOrderTest extends BaseTest
      */
     public function setUp()
     {
-        $client  = new Client();
-        $index = $client->getIndex('test_index');
-        if ($index->exists()) {
-            $index->delete();
-        }
-        $index->create();
-        $type = $index->getType('test_type');
-
-        $documents = array();
-        $fixtures = require('Fixtures/documents.php');
-        foreach ($fixtures as $id => $fixture) {
-            $documents[] = new Document($id, $fixture);
-        }
-        $type->addDocuments($documents);
-        $index->flush(true);
-
-        $this->dataSource = $this->getDataSourceFactory()->createDataSource(
-            'elastica',
-            array('searchable' => $type)
-        );
+        $this->dataSource = $this->prepareIndex('test_index', 'test_type');
         $this->dataSource
             ->addField('surname', 'text', 'match')
             ->addField('active', 'boolean', 'eq')

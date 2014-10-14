@@ -2,9 +2,10 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Tests\Field;
 
+use FSi\Component\DataSource\Driver\Elastica\Tests\BaseTest;
 use FSi\Component\DataSource\Driver\Elastica\Tests\Fixtures\Branch;
 
-class EntityTest extends BaseFieldTest
+class EntityTest extends BaseTest
 {
     /**
      * {@inheritdoc}
