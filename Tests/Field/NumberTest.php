@@ -2,37 +2,14 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Tests\Field;
 
-use Elastica\Client;
-use Elastica\Document;
-use FSi\Component\DataSource\Driver\Elastica\Tests\BaseTest;
-
-class NumberTest extends BaseTest
+class NumberTest extends BaseFieldTest
 {
     /**
      * {@inheritdoc}
      */
     public function setUp()
     {
-        $client  = new Client();
-        $index = $client->getIndex('number_index');
-        if ($index->exists()) {
-            $index->delete();
-        }
-        $index->create();
-        $type = $index->getType('number_type');
-
-        $documents = array();
-        $fixtures = require(__DIR__ . '/../Fixtures/documents.php');
-        foreach ($fixtures as $id => $fixture) {
-            $documents[] = new Document($id, $fixture);
-        }
-        $type->addDocuments($documents);
-        $index->flush(true);
-
-        $this->dataSource = $this->getDataSourceFactory()->createDataSource(
-            'elastica',
-            array('searchable' => $type)
-        );
+        $this->dataSource = $this->prepareIndex('datetime_index', 'datetime_type');
     }
 
     public function testFilterByEmptyParameter()

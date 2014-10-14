@@ -2,42 +2,22 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Tests\Field;
 
-use Elastica\Client;
-use Elastica\Document;
-use FSi\Component\DataSource\Driver\Elastica\Tests\BaseTest;
-
-class TimeTest extends BaseTest
+class TimeTest extends BaseFieldTest
 {
     /**
      * {@inheritdoc}
      */
     public function setUp()
     {
-        $client  = new Client();
-        $index = $client->getIndex('time_index');
-        if ($index->exists()) {
-            $index->delete();
-        }
-        $index->create();
-        $type = $index->getType('time_type');
-        $type->setMapping(array(
+        $mapping = array(
             'timestamp' => array('type' => 'date', 'format' => 'basic_time_no_millis'),
-        ));
-
-        $documents = array();
-        $fixtures = require(__DIR__ . '/../Fixtures/documents.php');
-        foreach ($fixtures as $id => $fixture) {
+        );
+        $this->dataSource = $this->prepareIndex('time_index', 'time_index', $mapping, function ($fixture) {
             $time = new \DateTime($fixture['timestamp']);
             $fixture['timestamp'] = $time->format('HisO');
-            $documents[] = new Document($id, $fixture);
-        }
-        $type->addDocuments($documents);
-        $index->flush(true);
 
-        $this->dataSource = $this->getDataSourceFactory()->createDataSource(
-            'elastica',
-            array('searchable' => $type)
-        );
+            return $fixture;
+        });
     }
 
     public function testFilterByEmptyParameter()

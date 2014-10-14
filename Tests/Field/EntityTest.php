@@ -2,39 +2,20 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Tests\Field;
 
-use Elastica\Client;
-use Elastica\Document;
-use FSi\Component\DataSource\Driver\Elastica\Tests\BaseTest;
 use FSi\Component\DataSource\Driver\Elastica\Tests\Fixtures\Branch;
 
-class EntityTest extends BaseTest
+class EntityTest extends BaseFieldTest
 {
     /**
      * {@inheritdoc}
      */
     public function setUp()
     {
-        $client  = new Client();
-        $index = $client->getIndex('entity_index');
-        if ($index->exists()) {
-            $index->delete();
-        }
-        $index->create();
-        $type = $index->getType('entity_type');
-
-        $documents = array();
-        $fixtures = require(__DIR__ . '/../Fixtures/documents.php');
-        foreach ($fixtures as $id => &$fixture) {
+        $this->dataSource = $this->prepareIndex('entity_index', 'entity_type', array(), function ($fixture) {
             $fixture['branch']['idx'] = $fixture['branch']['id'];
-            $documents[] = new Document($id, $fixture);
-        }
-        $type->addDocuments($documents);
-        $index->flush(true);
 
-        $this->dataSource = $this->getDataSourceFactory()->createDataSource(
-            'elastica',
-            array('searchable' => $type)
-        );
+            return $fixture;
+        });
         $this->dataSource->addField('branch', 'entity', 'eq');
     }
 
