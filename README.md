@@ -77,11 +77,6 @@ Service definition (`elastica-driver.xml`):
             <tag name="datasource.driver.elastica.field" alias="boolean" />
         </service>
 
-        <service id="datasource.driver.elastica.subscriber.result_indexer"
-                 class="FSi\Bundle\DataSourceBundle\DataSource\Extension\Elastica\ElasticaToModelResultIndexer">
-            <tag name="datasource.driver.elastica.subscriber" alias="result_indexer" />
-        </service>
-
         <!-- OrderingExtension -->
         <service id="datasource.driver.elastica.subscriber.ordering" class="FSi\Component\DataSource\Driver\Elastica\Extension\Ordering\OrderingDriverExtension">
             <tag name="datasource.driver.elastica.subscriber" alias="ordering" />
@@ -99,7 +94,6 @@ Service definition (`elastica-driver.xml`):
             <tag name="datasource.driver.elastica.field.subscriber" alias="symfony_null_form" />
             <argument type="service" id="translator" />
         </service>
-
     </services>
 </container>
 ```
@@ -131,7 +125,7 @@ Register Results Indexer
 ```yml
 xxx.datasource.elastica_driver.transformer_proxy:
     class: FSi\Bundle\XxxBundle\DataSource\TransformerProxy
-    arguments: [@fos_elastica.elastica_to_model_transformer.collection.mnk_crm]
+    arguments: [@fos_elastica.elastica_to_model_transformer.collection.xxx]
 
 xxx.datasource.elastica_driver.result_indexer:
     class: FSi\Component\DataSource\Driver\Elastica\Extension\Transformation\TransformationDriverExtension
