@@ -5,7 +5,6 @@ namespace FSi\Component\DataSource\Driver\Elastica\Tests\Field;
 use Elastica\Client;
 use Elastica\Document;
 use FSi\Component\DataSource\Driver\Elastica\Tests\BaseTest;
-use FSi\Component\DataSource\Driver\Elastica\Tests\DataSourceFactory;
 
 class TimeTest extends BaseTest
 {
@@ -35,8 +34,7 @@ class TimeTest extends BaseTest
         $type->addDocuments($documents);
         $index->flush(true);
 
-        $dataSourceFactory = new DataSourceFactory();
-        $this->dataSource = $dataSourceFactory->getDataSourceFactory()->createDataSource(
+        $this->dataSource = $this->getDataSourceFactory()->createDataSource(
             'elastica',
             array('searchable' => $type)
         );

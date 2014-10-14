@@ -29,8 +29,7 @@ class FetchAndOrderTest extends BaseTest
         $type->addDocuments($documents);
         $index->flush(true);
 
-        $dataSourceFactory = new DataSourceFactory();
-        $this->dataSource = $dataSourceFactory->getDataSourceFactory()->createDataSource(
+        $this->dataSource = $this->getDataSourceFactory()->createDataSource(
             'elastica',
             array('searchable' => $type)
         );

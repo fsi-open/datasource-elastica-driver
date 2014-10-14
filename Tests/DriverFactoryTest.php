@@ -2,7 +2,6 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 
-use Elastica\Client;
 use FSi\Component\DataSource\Driver\DriverAbstract;
 use FSi\Component\DataSource\Driver\DriverFactoryInterface;
 use FSi\Component\DataSource\Driver\Elastica\DriverFactory;

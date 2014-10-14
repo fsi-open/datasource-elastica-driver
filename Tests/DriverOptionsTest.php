@@ -100,8 +100,7 @@ class DriverOptionsTest extends BaseTest
         $type->addDocuments($documents);
         $index->flush(true);
 
-        $dataSourceFactory = new DataSourceFactory();
-        $this->dataSource = $dataSourceFactory->getDataSourceFactory()->createDataSource(
+        $this->dataSource = $this->getDataSourceFactory()->createDataSource(
             'elastica',
             array(
                 'searchable' => $client->getIndex('test_index')->getType('test_type'),
