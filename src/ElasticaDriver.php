@@ -11,7 +11,7 @@ use Elastica\Query;
 use Elastica\SearchableInterface;
 use FSi\Component\DataSource\Driver\DriverAbstract;
 
-class Driver extends DriverAbstract
+class ElasticaDriver extends DriverAbstract
 {
     /**
      * @var \Elastica\Filter\BoolAnd

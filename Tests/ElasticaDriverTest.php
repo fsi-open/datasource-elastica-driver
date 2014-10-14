@@ -2,16 +2,16 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 
-use FSi\Component\DataSource\Driver\Elastica\Driver;
+use FSi\Component\DataSource\Driver\Elastica\ElasticaDriver;
 use FSi\Component\DataSource\Driver\Elastica\Extension\Core\CoreDriverExtension;
 use FSi\Component\DataSource\Driver\Elastica\FieldInterface;
 use FSi\Component\DataSource\Field\FieldTypeInterface;
 
-class DriverTest extends \PHPUnit_Framework_TestCase
+class ElasticaDriverTest extends \PHPUnit_Framework_TestCase
 {
     public function testDriverHasExtensions()
     {
-        $driver = new Driver(
+        $driver = new ElasticaDriver(
             array(new CoreDriverExtension()),
             $this->getMock('Elastica\SearchableInterface')
         );
@@ -46,7 +46,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
      */
     public function testFields($fieldName)
     {
-        $driver = new Driver(
+        $driver = new ElasticaDriver(
             array(new CoreDriverExtension()),
             $this->getMock('Elastica\SearchableInterface')
         );

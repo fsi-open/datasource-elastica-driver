@@ -4,7 +4,7 @@ namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
 use Elastica\Filter\AbstractMulti;
 use Elastica\Query\Bool;
-use FSi\Component\DataSource\Driver\Elastica\DriverException;
+use FSi\Component\DataSource\Driver\Elastica\Exception\ElasticaDriverException;
 use FSi\Component\DataSource\Field\FieldAbstractType;
 use Elastica\Filter\Range;
 use Elastica\Filter\Term;
@@ -40,7 +40,7 @@ abstract class AbstractField extends FieldAbstractType
                 break;
             case 'between':
                 if (!is_array($data)) {
-                    throw new \InvalidArgumentException();
+                    throw new ElasticaDriverException;
                 }
                 $from = array_shift($data);
                 $to = array_shift($data);
@@ -60,7 +60,7 @@ abstract class AbstractField extends FieldAbstractType
             case 'notIn':
                 $data = $this->getCleanParameter();
                 if (!is_array($data)) {
-                    throw new \InvalidArgumentException();
+                    throw new ElasticaDriverException();
                 }
                 $filter->addFilter(
                     new BoolNot(
@@ -69,7 +69,7 @@ abstract class AbstractField extends FieldAbstractType
                 );
                 break;
             default:
-                throw new DriverException(
+                throw new ElasticaDriverException(
                     sprintf('Unexpected comparison type ("%s").', $this->getComparison())
                 );
         }

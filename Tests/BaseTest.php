@@ -4,7 +4,7 @@ namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 
 use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\Driver\DriverFactoryManager;
-use FSi\Component\DataSource\Driver\Elastica\DriverFactory;
+use FSi\Component\DataSource\Driver\Elastica\ElasticaDriverFactory;
 use FSi\Component\DataSource\Driver\Elastica\Extension\Core\CoreDriverExtension;
 use FSi\Component\DataSource\Driver\Elastica\Extension\Indexing\IndexingDriverExtension;
 use FSi\Component\DataSource\Driver\Elastica\Extension\Ordering\OrderingDriverExtension;
@@ -37,7 +37,7 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
 
         $driverFactoryManager = new DriverFactoryManager(
             array(
-                new DriverFactory($driverExtensions)
+                new ElasticaDriverFactory($driverExtensions)
             )
         );
 

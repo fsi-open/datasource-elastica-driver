@@ -3,7 +3,7 @@
 namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 
 use FSi\Component\DataSource\DataSource;
-use FSi\Component\DataSource\Driver\Elastica\Driver;
+use FSi\Component\DataSource\Driver\Elastica\ElasticaDriver;
 use FSi\Component\DataSource\Driver\Elastica\Extension\Transformation\TransformationDriverExtension;
 use FSi\Component\DataSource\Driver\Elastica\Tests\Fixtures\Transformer;
 
@@ -24,7 +24,7 @@ class TransformResultTest extends \PHPUnit_Framework_TestCase
             ->willReturn($elasticaResultSet);
 
         $datasource = new DataSource(
-            new Driver(
+            new ElasticaDriver(
                 array(new TransformationDriverExtension(new Transformer())),
                 $searchable
             ),

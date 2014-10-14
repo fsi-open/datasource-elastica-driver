@@ -15,7 +15,7 @@ Service definition (`elastica-driver.xml`):
 
     <parameters>
         <parameter key="datasource.driver.extension.class">FSi\Component\DataSource\Extension\Symfony\DependencyInjection\Driver\DriverExtension</parameter>
-        <parameter key="datasource.driver.elastica.factory.class">FSi\Component\DataSource\Driver\Elastica\DriverFactory</parameter>
+        <parameter key="datasource.driver.elastica.factory.class">FSi\Component\DataSource\Driver\Elastica\ElasticaDriverFactory</parameter>
     </parameters>
 
     <services>
@@ -27,6 +27,7 @@ Service definition (`elastica-driver.xml`):
             </argument>
         </service>
 
+        <!-- DataSource Elastica Extensions -->
         <!-- DataSource Elastica Extensions -->
         <service id="datasource.driver.elastica.extension" class="%datasource.driver.extension.class%">
             <argument type="service" id="service_container" />

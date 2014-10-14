@@ -5,7 +5,7 @@ namespace FSi\Component\DataSource\Driver\Elastica;
 use FSi\Component\DataSource\Driver\DriverFactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DriverFactory implements DriverFactoryInterface
+class ElasticaDriverFactory implements DriverFactoryInterface
 {
     /**
      * @var \Symfony\Component\OptionsResolver\OptionsResolver
@@ -40,7 +40,7 @@ class DriverFactory implements DriverFactoryInterface
     {
         $options = $this->optionsResolver->resolve($options);
 
-        return new Driver(
+        return new ElasticaDriver(
             $this->extensions,
             $options['searchable'],
             $options['query'],

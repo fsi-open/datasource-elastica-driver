@@ -1,7 +1,7 @@
 {
-    "name": "fsi/datasource-elastica-bundle",
+    "name": "fsi/datasource-elastica-driver",
     "type": "library",
-    "description": "Elastica FSi DataSource Bundle",
+    "description": "Elastica FSi DataSource Driver",
     "keywords": ["fsi", "component", "datasource", "driver", "elastica", "elasticsearch"],
     "license": "MIT",
     "authors": [
