@@ -17,7 +17,7 @@ abstract class AbstractField extends FieldAbstractType
     public function buildQuery(Bool $query, AbstractMulti $filter)
     {
         $data = $this->getCleanParameter();
-        if ($data === array() || $data === '' || $data === null) {
+        if ($this->isEmpty($data)) {
             return;
         }
 
@@ -105,5 +105,10 @@ abstract class AbstractField extends FieldAbstractType
     protected function getField()
     {
         return $this->getOption('field');
+    }
+
+    protected function isEmpty($data)
+    {
+        return ($data === array() || $data === '' || $data === null);
     }
 }

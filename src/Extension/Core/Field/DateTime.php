@@ -25,7 +25,7 @@ class DateTime extends AbstractField implements ElasticaFieldInterface
     public function buildQuery(Bool $query, AbstractMulti $filter)
     {
         $data = $this->getCleanParameter();
-        if ($data === array() || $data === '' || $data === null) {
+        if ($this->isEmpty($data)) {
             return;
         }
 
