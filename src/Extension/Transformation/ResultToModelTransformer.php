@@ -1,6 +1,6 @@
 <?php
 
-namespace FSi\Component\DataSource\Driver\Elastica;
+namespace FSi\Component\DataSource\Driver\Elastica\Extension\Transformation;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Elastica\ResultSet;

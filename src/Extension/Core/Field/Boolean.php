@@ -6,9 +6,9 @@ use Elastica\Filter\AbstractMulti;
 use Elastica\Filter\Term;
 use Elastica\Query;
 use Elastica\Query\Bool;
-use FSi\Component\DataSource\Driver\Elastica\FieldInterface;
+use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
 
-class Boolean extends AbstractField implements FieldInterface
+class Boolean extends AbstractField implements ElasticaFieldInterface
 {
     /**
      * {@inheritdoc}

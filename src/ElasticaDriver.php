@@ -90,9 +90,9 @@ class ElasticaDriver extends DriverAbstract
         }
 
         foreach ($fields as $field) {
-            if (!$field instanceof FieldInterface) {
+            if (!$field instanceof ElasticaFieldInterface) {
                 throw new \RuntimeException(
-                    sprintf('All fields must be instances of \FSi\Component\DataSource\Driver\Elastica\FieldInterface')
+                    sprintf('All fields must be instances of \FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface')
                 );
             }
 

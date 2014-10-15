@@ -2,7 +2,7 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Tests\Fixtures;
 
-use FSi\Component\DataSource\Driver\Elastica\TransformerInterface;
+use FSi\Component\DataSource\Driver\Elastica\Extension\Transformation\TransformerInterface;
 
 class Transformer implements TransformerInterface
 {

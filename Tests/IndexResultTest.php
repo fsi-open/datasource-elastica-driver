@@ -30,6 +30,6 @@ class IndexResultTest extends \PHPUnit_Framework_TestCase
         $result = $datasource->getResult();
 
         $this->assertNotInstanceOf('\Elastica\ResultSet', $result);
-        $this->assertInstanceOf('\FSi\Component\DataSource\Driver\Elastica\Result', $result);
+        $this->assertInstanceOf('\FSi\Component\DataSource\Driver\Elastica\ElasticaResult', $result);
     }
 }

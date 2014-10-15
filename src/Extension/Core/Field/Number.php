@@ -2,9 +2,9 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
-use FSi\Component\DataSource\Driver\Elastica\FieldInterface;
+use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
 
-class Number extends AbstractField implements FieldInterface
+class Number extends AbstractField implements ElasticaFieldInterface
 {
     /**
      * {@inheritdoc}

@@ -8,9 +8,9 @@ use Elastica\Query;
 use Elastica\Query\Bool;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\Exception\DoctrineDriverException;
 use FSi\Component\DataSource\Driver\Elastica\DriverException;
-use FSi\Component\DataSource\Driver\Elastica\FieldInterface;
+use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
 
-class DateTime extends AbstractField implements FieldInterface
+class DateTime extends AbstractField implements ElasticaFieldInterface
 {
     /**
      * {@inheritdoc}

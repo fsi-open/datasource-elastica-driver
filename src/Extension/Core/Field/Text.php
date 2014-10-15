@@ -5,9 +5,9 @@ namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 use Elastica\Filter\AbstractMulti;
 use Elastica\Query;
 use Elastica\Query\Bool;
-use FSi\Component\DataSource\Driver\Elastica\FieldInterface;
+use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
 
-class Text extends AbstractField implements FieldInterface
+class Text extends AbstractField implements ElasticaFieldInterface
 {
     /**
      * {@inheritdoc}

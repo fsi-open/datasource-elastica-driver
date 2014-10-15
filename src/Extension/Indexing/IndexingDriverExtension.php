@@ -4,7 +4,7 @@ namespace FSi\Component\DataSource\Driver\Elastica\Extension\Indexing;
 
 use Elastica\ResultSet;
 use FSi\Component\DataSource\Driver\DriverAbstractExtension;
-use FSi\Component\DataSource\Driver\Elastica\Result;
+use FSi\Component\DataSource\Driver\Elastica\ElasticaResult;
 use FSi\Component\DataSource\Event\DriverEvents;
 use FSi\Component\DataSource\Event\DriverEvent;
 use FSi\Component\DataSource\Event\DriverEvent\ResultEventArgs;
@@ -32,7 +32,7 @@ class IndexingDriverExtension extends DriverAbstractExtension
         $result = $event->getResult();
 
         if ($result instanceof ResultSet) {
-            $result = new Result($result);
+            $result = new ElasticaResult($result);
             $event->setResult($result);
         }
     }

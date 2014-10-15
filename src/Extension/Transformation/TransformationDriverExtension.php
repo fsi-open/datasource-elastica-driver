@@ -4,15 +4,13 @@ namespace FSi\Component\DataSource\Driver\Elastica\Extension\Transformation;
 
 use Elastica\ResultSet;
 use FSi\Component\DataSource\Driver\DriverAbstractExtension;
-use FSi\Component\DataSource\Driver\Elastica\ResultToModelTransformer;
-use FSi\Component\DataSource\Driver\Elastica\TransformerInterface;
 use FSi\Component\DataSource\Event\DriverEvents;
 use FSi\Component\DataSource\Event\DriverEvent\ResultEventArgs;
 
 class TransformationDriverExtension extends DriverAbstractExtension
 {
     /**
-     * @var \FSi\Component\DataSource\Driver\Elastica\TransformerInterface
+     * @var TransformerInterface
      */
     private $transformer;
 

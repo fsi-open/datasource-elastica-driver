@@ -5,10 +5,10 @@ namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 use Elastica\Filter\AbstractMulti;
 use Elastica\Filter;
 use Elastica\Query\Bool;
-use FSi\Component\DataSource\Driver\Elastica\FieldInterface;
+use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
-class Entity extends AbstractField implements FieldInterface
+class Entity extends AbstractField implements ElasticaFieldInterface
 {
     /**
      * {@inheritdoc}

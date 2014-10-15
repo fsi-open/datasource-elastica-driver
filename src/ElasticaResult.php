@@ -4,7 +4,7 @@ namespace FSi\Component\DataSource\Driver\Elastica;
 
 use Elastica\ResultSet;
 
-class Result implements \IteratorAggregate, \Countable
+class ElasticaResult implements \IteratorAggregate, \Countable
 {
     /**
      * @var \Elastica\ResultSet

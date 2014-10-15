@@ -4,7 +4,7 @@ namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 
 use FSi\Component\DataSource\Driver\Elastica\ElasticaDriver;
 use FSi\Component\DataSource\Driver\Elastica\Extension\Core\CoreDriverExtension;
-use FSi\Component\DataSource\Driver\Elastica\FieldInterface;
+use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
 use FSi\Component\DataSource\Field\FieldTypeInterface;
 
 class ElasticaDriverTest extends \PHPUnit_Framework_TestCase
@@ -56,7 +56,7 @@ class ElasticaDriverTest extends \PHPUnit_Framework_TestCase
         /** @var FieldTypeInterface $field */
         $field = $driver->getFieldType($fieldName);
         $this->assertTrue($field instanceof FieldTypeInterface);
-        $this->assertTrue($field instanceof FieldInterface);
+        $this->assertTrue($field instanceof ElasticaFieldInterface);
 
         $comparisons = $field->getAvailableComparisons();
         $this->assertGreaterThan(0, count($comparisons));
