@@ -9,6 +9,9 @@ class Date extends DateTime
      */
     protected $comparisons = array('eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'between');
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getFormat()
     {
         return 'Y-m-d';

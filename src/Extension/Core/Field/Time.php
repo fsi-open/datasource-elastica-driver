@@ -9,6 +9,9 @@ class Time extends DateTime
      */
     protected $comparisons = array('eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'between');
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getFormat()
     {
         return 'HisO';

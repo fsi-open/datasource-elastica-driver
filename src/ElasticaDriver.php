@@ -42,6 +42,7 @@ class ElasticaDriver extends DriverAbstract
      * @var \Elastica\Filter\AbstractFilter
      */
     private $userFilter;
+
     /**
      * @var \Elastica\Query
      */

@@ -6,9 +6,8 @@ use Elastica\Filter\AbstractMulti;
 use Elastica\Filter\Range;
 use Elastica\Query;
 use Elastica\Query\Bool;
-use FSi\Component\DataSource\Driver\Doctrine\ORM\Exception\DoctrineDriverException;
-use FSi\Component\DataSource\Driver\Elastica\DriverException;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
+use FSi\Component\DataSource\Driver\Elastica\Exception\ElasticaDriverException;
 
 class DateTime extends AbstractField implements ElasticaFieldInterface
 {
@@ -17,11 +16,17 @@ class DateTime extends AbstractField implements ElasticaFieldInterface
      */
     protected $comparisons = array('eq', 'lt', 'lte', 'gt', 'gte', 'between');
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getFormat()
     {
         return \DateTime::ISO8601;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildQuery(Bool $query, AbstractMulti $filter)
     {
         $data = $this->getCleanParameter();
@@ -68,7 +73,7 @@ class DateTime extends AbstractField implements ElasticaFieldInterface
                 )
             );
         } else {
-            throw new DriverException(sprintf('Unexpected comparison type ("%s").', $this->getComparison()));
+            throw new ElasticaDriverException(sprintf('Unexpected comparison type ("%s").', $this->getComparison()));
         }
     }
 

@@ -14,6 +14,9 @@ class Text extends AbstractField implements ElasticaFieldInterface
      */
     protected $comparisons = array('match');
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildQuery(Bool $query, AbstractMulti $filter)
     {
         $data = $this->getCleanParameter();

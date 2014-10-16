@@ -14,6 +14,9 @@ use Elastica\Query;
 
 abstract class AbstractField extends FieldAbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildQuery(Bool $query, AbstractMulti $filter)
     {
         $data = $this->getCleanParameter();

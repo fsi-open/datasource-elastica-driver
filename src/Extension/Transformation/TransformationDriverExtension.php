@@ -19,6 +19,9 @@ class TransformationDriverExtension extends DriverAbstractExtension
         $this->transformer = $transformer;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getExtendedDriverTypes()
     {
         return array('elastica');

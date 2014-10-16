@@ -19,6 +19,9 @@ class ResultToModelTransformer extends ArrayCollection
         parent::__construct($transformer->transform($this->resultSet->getResults()));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function count()
     {
         return $this->resultSet->getTotalHits();

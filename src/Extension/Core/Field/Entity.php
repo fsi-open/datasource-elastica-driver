@@ -15,6 +15,9 @@ class Entity extends AbstractField implements ElasticaFieldInterface
      */
     protected $comparisons = array('eq');
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildQuery(Bool $query, AbstractMulti $filter)
     {
         $data = $this->getCleanParameter();
