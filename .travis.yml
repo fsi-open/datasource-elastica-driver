@@ -1,5 +1,11 @@
 language: php
 
+cache:
+  apt: true
+  directories:
+    - vendor
+    - bin
+
 php:
   - 5.3
   - 5.4
@@ -7,3 +13,9 @@ php:
 
 services:
   - elasticsearch
+
+before_script:
+  - composer self-update
+  - composer update
+
+script: bin/phpunit
