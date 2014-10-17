@@ -28,7 +28,6 @@ Service definition (`elastica-driver.xml`):
         </service>
 
         <!-- DataSource Elastica Extensions -->
-        <!-- DataSource Elastica Extensions -->
         <service id="datasource.driver.elastica.extension" class="%datasource.driver.extension.class%">
             <argument type="service" id="service_container" />
             <argument type="string">elastica</argument>
@@ -142,7 +141,7 @@ Result Indexer
 namespace FSi\Bundle\XxxBundle\DataSource;
 
 use FOS\ElasticaBundle\Transformer\ElasticaToModelTransformerInterface;
-use FSi\Component\DataSource\Driver\Elastica\TransformerInterface;
+use FSi\Component\DataSource\Driver\Elastica\Extension\Transformation\TransformerInterface;
 
 class TransformerProxy implements TransformerInterface
 {
