@@ -111,7 +111,7 @@ class ElasticaDriver extends DriverAbstract
 
         $tempFilters = $this->filters->getFilters();
         if (!empty($tempFilters)) {
-            $this->query->setFilter($this->filters);
+            $this->query->setPostFilter($this->filters);
         }
 
         if ($limit > 0) {
