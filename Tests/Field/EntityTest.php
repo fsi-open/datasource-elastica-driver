@@ -12,7 +12,7 @@ class EntityTest extends BaseTest
      */
     public function setUp()
     {
-        $this->dataSource = $this->prepareIndex('entity_index', 'entity_type', array(), function ($fixture) {
+        $this->dataSource = $this->prepareIndex('entity_index', 'entity_type', null, function ($fixture) {
             $fixture['branch']['idx'] = $fixture['branch']['id'];
 
             return $fixture;
