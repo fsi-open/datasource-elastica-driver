@@ -82,8 +82,8 @@ class TimeTest extends BaseTest
         $result = $this->filterDataSource(
             array(
                 'timestamp' => array(
-                    new \DateTime('T14:10:16+0200'),
-                    new \DateTime('T17:07:16+0200'),
+                    'from' => new \DateTime('T14:10:16+0200'),
+                    'to' => new \DateTime('T17:07:16+0200'),
                 )
             )
         );

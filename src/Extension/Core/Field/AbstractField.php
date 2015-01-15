@@ -85,7 +85,7 @@ abstract class AbstractField extends FieldAbstractType
     {
         $field = $this;
         $this->getOptionsResolver()
-            ->setOptional(array('field'))
+            ->setDefault('field', null)
             ->setAllowedTypes(
                 array(
                     'field' => array('string', 'null')
@@ -112,6 +112,10 @@ abstract class AbstractField extends FieldAbstractType
 
     protected function isEmpty($data)
     {
+        if (is_array($data)) {
+            $data = array_filter($data);
+        }
+
         return ($data === array() || $data === '' || $data === null);
     }
 }

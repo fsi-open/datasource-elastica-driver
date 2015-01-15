@@ -74,12 +74,70 @@ class DateTimeTest extends BaseTest
         $result = $this->filterDataSource(
             array(
                 'timestamp' => array(
-                    new \DateTime('2014-06-07T17:07:16+0200'),
-                    new \DateTime('2014-06-10T14:10:16+0200'),
+                    'from' => new \DateTime('2014-06-07T17:07:16+0200'),
+                    'to' => new \DateTime('2014-06-10T14:10:16+0200'),
                 )
             )
         );
 
         $this->assertEquals(4, count($result));
+    }
+
+    public function testFilterByDateTimeBetweenAcceptAssociativeArray()
+    {
+        $this->dataSource->addField('timestamp', 'datetime', 'between');
+        $result = $this->filterDataSource(
+            array(
+                'timestamp' => array(
+                    'from' => new \DateTime('2014-06-07T17:07:16+0200'),
+                    'to' => new \DateTime('2014-06-10T14:10:16+0200'),
+                )
+            )
+        );
+
+        $this->assertEquals(4, count($result));
+    }
+
+    public function testFilterByDateTimeBetweenDiscardEmptyParameters()
+    {
+        $this->dataSource->addField('timestamp', 'datetime', 'between');
+        $result = $this->filterDataSource(
+            array(
+                'timestamp' => array(
+                    'from' => null,
+                    'to' => null,
+                )
+            )
+        );
+
+        $this->assertEquals(11, count($result));
+    }
+
+    public function testFilterByDateTimeBetweenOnlyFromField()
+    {
+        $this->dataSource->addField('timestamp', 'datetime', 'between');
+        $result = $this->filterDataSource(
+            array(
+                'timestamp' => array(
+                    'from' => new \DateTime('2014-06-07T17:07:16+0200'),
+                )
+            )
+        );
+
+        $this->assertEquals(4, count($result));
+    }
+
+    public function testFilterByDateTimeBetweenOnlyToField()
+    {
+        $this->dataSource->addField('timestamp', 'datetime', 'between');
+        $result = $this->filterDataSource(
+            array(
+                'timestamp' => array(
+                    'to' => new \DateTime('2014-06-07T17:07:16+0200'),
+                )
+            )
+        );
+
+        $this->assertEquals(8, count($result));
     }
 }

@@ -61,17 +61,28 @@ class DateTime extends AbstractField implements ElasticaFieldInterface
                 throw new \InvalidArgumentException();
             }
 
-            list($from, $to) = $data;
-
-            $filter->addFilter(
-                new Range(
-                    $fieldPath,
-                    array(
-                        'gte' => $from->format($this->getFormat()),
-                        'lte' => $to->format($this->getFormat()),
+            if (!empty($data['from'])) {
+                $filter->addFilter(
+                    new Range(
+                        $fieldPath,
+                        array(
+                            'gte' => $data['from']->format($this->getFormat()),
+                        )
                     )
-                )
-            );
+                );
+            }
+
+            if (!empty($data['to'])) {
+                $filter->addFilter(
+                    new Range(
+                        $fieldPath,
+                        array(
+                            'lte' => $data['to']->format($this->getFormat()),
+                        )
+                    )
+                );
+            }
+
         } else {
             throw new ElasticaDriverException(sprintf('Unexpected comparison type ("%s").', $this->getComparison()));
         }
