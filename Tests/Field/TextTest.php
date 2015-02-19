@@ -41,6 +41,16 @@ class TextTest extends BaseTest
         $this->assertEquals(11, count($result));
     }
 
+    public function testFindByMultipleFields()
+    {
+        $this->dataSource->clearFields();
+        $this->dataSource->addField('multi', 'text', 'match', array('field' => array('about', 'name')));
+
+        $result = $this->filterDataSource(array('multi' => 'MarkA Janusz'));
+
+        $this->assertEquals(3, count($result));
+    }
+
     public function testFindItemsByMultipleWordWithAndOperator()
     {
         $this->dataSource->clearFields();

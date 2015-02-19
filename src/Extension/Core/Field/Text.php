@@ -24,9 +24,17 @@ class Text extends AbstractField implements ElasticaFieldInterface
             return;
         }
 
-        $match = new Query\Match();
-        $match->setFieldQuery($this->getField(), $data);
-        $match->setFieldOperator($this->getField(), $this->getOption('operator'));
+        $field = $this->getField();
+        if (is_array($field)) {
+            $match = new Query\MultiMatch();
+            $match->setFields($field);
+            $match->setQuery($data);
+            $match->setOperator($this->getOption('operator'));
+        } else {
+            $match = new Query\Match();
+            $match->setFieldQuery($field, $data);
+            $match->setFieldOperator($field, $this->getOption('operator'));
+        }
 
         $query->addMust($match);
     }
@@ -48,6 +56,7 @@ class Text extends AbstractField implements ElasticaFieldInterface
 
         $this->getOptionsResolver()
             ->setDefaults(array('operator' => 'or'))
+            ->setAllowedTypes('field', array('array', 'string', 'null'))
             ->addAllowedValues(
                 array(
                     'operator' => array('or', 'and')
