@@ -129,7 +129,7 @@ xxx.datasource.elastica_driver.transformer_proxy:
 
 xxx.datasource.elastica_driver.result_indexer:
     class: FSi\Component\DataSource\Driver\Elastica\Extension\Transformation\TransformationDriverExtension
-    arguments: [@xxx.datasource.elastica_driver.transformer_proxy]
+    arguments: [@xxx.datasource.elastica_driver.transformer_proxy, @doctrine]
     tags:
         - {name: datasource.driver.elastica.subscriber, alias: result_indexer}
 ```

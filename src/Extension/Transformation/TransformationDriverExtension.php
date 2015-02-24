@@ -2,6 +2,7 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Transformation;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Elastica\ResultSet;
 use FSi\Component\DataSource\Driver\DriverAbstractExtension;
 use FSi\Component\DataSource\Event\DriverEvents;
@@ -14,9 +15,15 @@ class TransformationDriverExtension extends DriverAbstractExtension
      */
     private $transformer;
 
-    public function __construct(TransformerInterface $transformer)
+    /**
+     * @var ManagerRegistry
+     */
+    private $registry;
+
+    public function __construct(TransformerInterface $transformer, ManagerRegistry $registry)
     {
         $this->transformer = $transformer;
+        $this->registry = $registry;
     }
 
     /**
@@ -40,7 +47,7 @@ class TransformationDriverExtension extends DriverAbstractExtension
         $result = $event->getResult();
 
         if ($result instanceof ResultSet) {
-            $result = new ResultToModelTransformer($this->transformer, $result);
+            $result = new ResultToModelTransformer($this->transformer, $this->registry, $result);
             $event->setResult($result);
         }
     }
