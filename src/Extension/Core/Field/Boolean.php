@@ -5,7 +5,7 @@ namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 use Elastica\Filter\AbstractMulti;
 use Elastica\Filter\Term;
 use Elastica\Query;
-use Elastica\Query\Bool;
+use Elastica\Query\BoolQuery;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
 
 class Boolean extends AbstractField implements ElasticaFieldInterface
@@ -18,7 +18,7 @@ class Boolean extends AbstractField implements ElasticaFieldInterface
     /**
      * {@inheritdoc}
      */
-    public function buildQuery(Bool $query, AbstractMulti $filter)
+    public function buildQuery(BoolQuery $query, AbstractMulti $filter)
     {
         $data = $this->getCleanParameter();
         if ($this->isEmpty($data)) {

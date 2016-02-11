@@ -4,7 +4,7 @@ namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
 use Elastica\Filter\AbstractMulti;
 use Elastica\Filter;
-use Elastica\Query\Bool;
+use Elastica\Query\BoolQuery;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
@@ -18,7 +18,7 @@ class Entity extends AbstractField implements ElasticaFieldInterface
     /**
      * {@inheritdoc}
      */
-    public function buildQuery(Bool $query, AbstractMulti $filter)
+    public function buildQuery(BoolQuery $query, AbstractMulti $filter)
     {
         $data = $this->getCleanParameter();
         if (empty($data)) {

@@ -5,7 +5,7 @@ namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 use Elastica\Filter\AbstractMulti;
 use Elastica\Filter\Range;
 use Elastica\Query;
-use Elastica\Query\Bool;
+use Elastica\Query\BoolQuery;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
 use FSi\Component\DataSource\Driver\Elastica\Exception\ElasticaDriverException;
 
@@ -27,7 +27,7 @@ class DateTime extends AbstractField implements ElasticaFieldInterface
     /**
      * {@inheritdoc}
      */
-    public function buildQuery(Bool $query, AbstractMulti $filter)
+    public function buildQuery(BoolQuery $query, AbstractMulti $filter)
     {
         $data = $this->getCleanParameter();
         if ($this->isEmpty($data)) {
