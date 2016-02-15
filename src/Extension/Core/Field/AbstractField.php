@@ -3,7 +3,7 @@
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
 use Elastica\Filter\AbstractMulti;
-use Elastica\Query\Bool;
+use Elastica\Query\BoolQuery;
 use FSi\Component\DataSource\Driver\Elastica\Exception\ElasticaDriverException;
 use FSi\Component\DataSource\Field\FieldAbstractType;
 use Elastica\Filter\Range;
@@ -17,7 +17,7 @@ abstract class AbstractField extends FieldAbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildQuery(Bool $query, AbstractMulti $filter)
+    public function buildQuery(BoolQuery $query, AbstractMulti $filter)
     {
         $data = $this->getCleanParameter();
         if ($this->isEmpty($data)) {

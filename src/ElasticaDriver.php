@@ -6,7 +6,7 @@ use Elastica\Filter\AbstractFilter;
 use Elastica\Filter\BoolAnd;
 use Elastica\Index;
 use Elastica\Query\AbstractQuery;
-use Elastica\Query\Bool;
+use Elastica\Query\BoolQuery;
 use Elastica\Query;
 use Elastica\SearchableInterface;
 use FSi\Component\DataSource\Driver\DriverAbstract;
@@ -19,7 +19,7 @@ class ElasticaDriver extends DriverAbstract
     private $filters;
 
     /**
-     * @var \Elastica\Query\Bool
+     * @var \Elastica\Query\BoolQuery
      */
     private $subQueries;
 
@@ -76,7 +76,7 @@ class ElasticaDriver extends DriverAbstract
      */
     public function initResult()
     {
-        $this->subQueries = new Bool();
+        $this->subQueries = new BoolQuery();
         $this->filters = new BoolAnd();
         $this->query = ($this->masterQuery === null) ? new Query() : $this->masterQuery;
     }

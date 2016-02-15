@@ -3,9 +3,9 @@
 namespace FSi\Component\DataSource\Driver\Elastica;
 
 use Elastica\Filter\AbstractMulti;
-use Elastica\Query\Bool;
+use Elastica\Query\BoolQuery;
 
 interface ElasticaFieldInterface
 {
-    public function buildQuery(Bool $query, AbstractMulti $filter);
+    public function buildQuery(BoolQuery $query, AbstractMulti $filter);
 }
