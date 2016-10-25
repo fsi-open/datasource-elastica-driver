@@ -6,8 +6,8 @@ use Elastica\Aggregation\Sum;
 use Elastica\Client;
 use Elastica\Document;
 use Elastica\Query;
-use Elastica\Filter\Term;
 use Elastica\Query\Match;
+use Elastica\Query\Term;
 
 class DriverOptionsTest extends BaseTest
 {

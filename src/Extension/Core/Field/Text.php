@@ -2,7 +2,6 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
-use Elastica\Filter\AbstractMulti;
 use Elastica\Query;
 use Elastica\Query\BoolQuery;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
@@ -17,7 +16,7 @@ class Text extends AbstractField implements ElasticaFieldInterface
     /**
      * {@inheritdoc}
      */
-    public function buildQuery(BoolQuery $query, AbstractMulti $filter)
+    public function buildQuery(BoolQuery $query, BoolQuery $filter)
     {
         $data = $this->getCleanParameter();
         if ($this->isEmpty($data)) {
@@ -57,11 +56,7 @@ class Text extends AbstractField implements ElasticaFieldInterface
         $this->getOptionsResolver()
             ->setDefaults(array('operator' => 'or'))
             ->setAllowedTypes('field', array('array', 'string', 'null'))
-            ->addAllowedValues(
-                array(
-                    'operator' => array('or', 'and')
-                )
-            )
+            ->setAllowedValues('operator', array('or', 'and'))
         ;
     }
 }

@@ -2,9 +2,6 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica;
 
-use Elastica\Filter\AbstractFilter;
-use Elastica\Filter\BoolAnd;
-use Elastica\Index;
 use Elastica\Query\AbstractQuery;
 use Elastica\Query\BoolQuery;
 use Elastica\Query;
@@ -14,7 +11,7 @@ use FSi\Component\DataSource\Driver\DriverAbstract;
 class ElasticaDriver extends DriverAbstract
 {
     /**
-     * @var \Elastica\Filter\BoolAnd
+     * @var \Elastica\Query\BoolQuery
      */
     private $filters;
 
@@ -39,7 +36,7 @@ class ElasticaDriver extends DriverAbstract
     private $userSubQuery;
 
     /**
-     * @var \Elastica\Filter\AbstractFilter
+     * @var \Elastica\Query\AbstractQuery
      */
     private $userFilter;
 
@@ -52,7 +49,7 @@ class ElasticaDriver extends DriverAbstract
      * @param $extensions array with extensions
      * @param SearchableInterface $searchable
      * @param AbstractQuery $userSubQuery
-     * @param AbstractFilter|AbstractQuery $userFilter
+     * @param AbstractQuery $userFilter
      * @param Query $masterQuery
      * @throws \FSi\Component\DataSource\Exception\DataSourceException
      */
@@ -60,7 +57,7 @@ class ElasticaDriver extends DriverAbstract
         $extensions,
         SearchableInterface $searchable,
         AbstractQuery $userSubQuery = null,
-        $userFilter = null,
+        AbstractQuery $userFilter = null,
         Query $masterQuery = null
     ) {
         parent::__construct($extensions);
@@ -77,7 +74,7 @@ class ElasticaDriver extends DriverAbstract
     public function initResult()
     {
         $this->subQueries = new BoolQuery();
-        $this->filters = new BoolAnd();
+        $this->filters = new BoolQuery();
         $this->query = ($this->masterQuery === null) ? new Query() : $this->masterQuery;
     }
 
@@ -87,7 +84,7 @@ class ElasticaDriver extends DriverAbstract
     public function buildResult($fields, $from, $limit)
     {
         if ($this->userFilter !== null) {
-            $this->filters->addPostFilter($this->userFilter);
+            $this->filters->addMust($this->userFilter);
         }
 
         foreach ($fields as $field) {
@@ -109,7 +106,7 @@ class ElasticaDriver extends DriverAbstract
             $this->query->setQuery($this->subQueries);
         }
 
-        $tempFilters = $this->filters->getFilters();
+        $tempFilters = $this->filters->getParams();
         if (!empty($tempFilters)) {
             $this->query->setPostFilter($this->filters);
         }

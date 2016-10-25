@@ -2,9 +2,8 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
-use Elastica\Filter\AbstractMulti;
-use Elastica\Filter;
 use Elastica\Query\BoolQuery;
+use Elastica\Query\Terms;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
@@ -18,7 +17,7 @@ class Entity extends AbstractField implements ElasticaFieldInterface
     /**
      * {@inheritdoc}
      */
-    public function buildQuery(BoolQuery $query, AbstractMulti $filter)
+    public function buildQuery(BoolQuery $query, BoolQuery $filter)
     {
         $data = $this->getCleanParameter();
         if (empty($data)) {
@@ -28,8 +27,8 @@ class Entity extends AbstractField implements ElasticaFieldInterface
         $accessor = PropertyAccess::createPropertyAccessor();
         $idFieldName = $this->getOption('identifier_field');
 
-        $filter->addFilter(
-            new Filter\Terms(
+        $filter->addMust(
+            new Terms(
                 sprintf("%s.%s", $this->getField(), $idFieldName),
                 array($accessor->getValue($data, $idFieldName))
             )
@@ -53,11 +52,7 @@ class Entity extends AbstractField implements ElasticaFieldInterface
 
         $this->getOptionsResolver()
             ->setDefaults(array('identifier_field' => 'id'))
-            ->setAllowedTypes(
-                array(
-                    'identifier_field' => array('string')
-                )
-            )
+            ->setAllowedTypes('identifier_field', array('string'))
         ;
     }
 }
