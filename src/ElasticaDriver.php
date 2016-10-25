@@ -52,7 +52,7 @@ class ElasticaDriver extends DriverAbstract
      * @param $extensions array with extensions
      * @param SearchableInterface $searchable
      * @param AbstractQuery $userSubQuery
-     * @param AbstractFilter $userFilter
+     * @param AbstractFilter|AbstractQuery $userFilter
      * @param Query $masterQuery
      * @throws \FSi\Component\DataSource\Exception\DataSourceException
      */
@@ -60,7 +60,7 @@ class ElasticaDriver extends DriverAbstract
         $extensions,
         SearchableInterface $searchable,
         AbstractQuery $userSubQuery = null,
-        AbstractFilter $userFilter = null,
+        $userFilter = null,
         Query $masterQuery = null
     ) {
         parent::__construct($extensions);
@@ -87,7 +87,7 @@ class ElasticaDriver extends DriverAbstract
     public function buildResult($fields, $from, $limit)
     {
         if ($this->userFilter !== null) {
-            $this->filters->addFilter($this->userFilter);
+            $this->filters->addPostFilter($this->userFilter);
         }
 
         foreach ($fields as $field) {

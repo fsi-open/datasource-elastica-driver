@@ -64,7 +64,7 @@ class ElasticaDriverFactory implements DriverFactoryInterface
             array(
                 'searchable' => array('\Elastica\SearchableInterface'),
                 'query' => array('null', '\Elastica\Query\AbstractQuery'),
-                'filter' => array('null', '\Elastica\Filter\AbstractFilter'),
+                'filter' => array('null', '\Elastica\Filter\AbstractFilter', '\Elastica\Query\AbstractQuery'),
                 'master_query' => array('null', '\Elastica\Query'),
             )
         );
