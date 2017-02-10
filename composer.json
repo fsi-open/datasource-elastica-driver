@@ -13,13 +13,14 @@
     "require": {
         "php": ">=5.3.0",
         "fsi/datasource" : "~1.2",
-        "ruflin/elastica": "^2.3",
+        "ruflin/elastica": "^3.0",
         "symfony/property-access": "~2.3",
         "doctrine/collections": "~1.2"
     },
     "require-dev": {
         "phpunit/phpunit": "4.1.*",
-        "psr/log": "~1.0"
+        "psr/log": "~1.0",
+        "symfony/phpunit-bridge": "^3.1"
     },
     "autoload": {
         "psr-4": {

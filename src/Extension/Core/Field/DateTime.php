@@ -2,10 +2,8 @@
 
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
-use Elastica\Filter\AbstractMulti;
-use Elastica\Filter\Range;
-use Elastica\Query;
 use Elastica\Query\BoolQuery;
+use Elastica\Query\Range;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
 use FSi\Component\DataSource\Driver\Elastica\Exception\ElasticaDriverException;
 
@@ -27,7 +25,7 @@ class DateTime extends AbstractField implements ElasticaFieldInterface
     /**
      * {@inheritdoc}
      */
-    public function buildQuery(BoolQuery $query, AbstractMulti $filter)
+    public function buildQuery(BoolQuery $query, BoolQuery $filter)
     {
         $data = $this->getCleanParameter();
         if ($this->isEmpty($data)) {
@@ -38,7 +36,7 @@ class DateTime extends AbstractField implements ElasticaFieldInterface
 
         if ($this->getComparison() == 'eq') {
             $formattedDate = $data->format($this->getFormat());
-            $filter->addFilter(
+            $filter->addMust(
                 new Range(
                     $fieldPath,
                     array(
@@ -48,7 +46,7 @@ class DateTime extends AbstractField implements ElasticaFieldInterface
                 )
             );
         } elseif (in_array($this->getComparison(), array('lt', 'lte', 'gt', 'gte'))) {
-            $filter->addFilter(
+            $filter->addMust(
                 new Range(
                     $fieldPath,
                     array(
@@ -62,7 +60,7 @@ class DateTime extends AbstractField implements ElasticaFieldInterface
             }
 
             if (!empty($data['from'])) {
-                $filter->addFilter(
+                $filter->addMust(
                     new Range(
                         $fieldPath,
                         array(
@@ -73,7 +71,7 @@ class DateTime extends AbstractField implements ElasticaFieldInterface
             }
 
             if (!empty($data['to'])) {
-                $filter->addFilter(
+                $filter->addMust(
                     new Range(
                         $fieldPath,
                         array(

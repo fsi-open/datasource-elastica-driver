@@ -60,13 +60,9 @@ class ElasticaDriverFactory implements DriverFactoryInterface
             )
         );
 
-        $this->optionsResolver->setAllowedTypes(
-            array(
-                'searchable' => array('\Elastica\SearchableInterface'),
-                'query' => array('null', '\Elastica\Query\AbstractQuery'),
-                'filter' => array('null', '\Elastica\Filter\AbstractFilter'),
-                'master_query' => array('null', '\Elastica\Query'),
-            )
-        );
+        $this->optionsResolver->setAllowedTypes('searchable', array('\Elastica\SearchableInterface'));
+        $this->optionsResolver->setAllowedTypes('query', array('null', '\Elastica\Query\AbstractQuery'));
+        $this->optionsResolver->setAllowedTypes('filter', array('null', '\Elastica\Query\AbstractQuery'));
+        $this->optionsResolver->setAllowedTypes('master_query', array('null', '\Elastica\Query'));
     }
 }

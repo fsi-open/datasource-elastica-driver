@@ -15,10 +15,13 @@ matrix:
     - php: 5.6
     - php: 7.0
 
-services:
-  - elasticsearch
+before_install:
+  - curl -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.4.4/elasticsearch-2.4.4.deb
+  - sudo dpkg -i --force-confnew elasticsearch-2.4.4.deb
+  - sudo service elasticsearch restart
 
 before_script:
+  - sleep 10 # for elasticsearch (from travis documentation)
   - composer self-update
   - if [[ "$DEPENDENCIES" != "low" ]]; then composer update; fi;
   - if [[ "$DEPENDENCIES" == "low" ]]; then composer update --prefer-lowest; fi;
