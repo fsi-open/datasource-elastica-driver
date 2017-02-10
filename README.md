@@ -2,6 +2,9 @@
 
 Experimental DataSource Driver for ElasticSearch
 
+## Requirements
+This driver requires ES ^2.0
+
 ## Use in Symfony2 Application
 
 Service definition (`elastica-driver.xml`):
