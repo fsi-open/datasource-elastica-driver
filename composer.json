@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.6.0",
         "fsi/datasource" : "~1.2",
         "ruflin/elastica": "^5.0",
         "symfony/property-access": "~2.3",
