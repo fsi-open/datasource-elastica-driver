@@ -12,14 +12,15 @@
     ],
     "require": {
         "php": ">=5.6.0",
-        "fsi/datasource" : "~1.2",
+        "fsi/datasource" : "^1.2",
         "ruflin/elastica": "^5.0",
-        "symfony/property-access": "~2.3",
-        "doctrine/collections": "~1.2"
+        "symfony/property-access": "^2.6|^3.0",
+        "symfony/options-resolver": "^2.6|^3.0",
+        "doctrine/collections": "^1.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.1.*",
-        "psr/log": "~1.0",
+        "phpunit/phpunit": "^4.1",
+        "psr/log": "^1.0",
         "symfony/phpunit-bridge": "^3.1"
     },
     "autoload": {
