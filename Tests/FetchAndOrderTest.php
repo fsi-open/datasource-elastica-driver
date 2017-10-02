@@ -11,7 +11,9 @@ class FetchAndOrderTest extends BaseTest
      */
     public function setUp()
     {
-        $this->dataSource = $this->prepareIndex('test_index', 'test_type');
+        $this->dataSource = $this->prepareIndex('test_index', 'test_type', array(
+            'surname' => array('type' => 'text', 'fielddata' => true),
+        ));
         $this->dataSource
             ->addField('surname', 'text', 'match')
             ->addField('active', 'boolean', 'eq')
