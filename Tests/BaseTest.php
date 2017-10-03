@@ -90,7 +90,7 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
             $documents[] = new Document($id, $fixture);
         }
         $type->addDocuments($documents);
-        $index->flush(true);
+        $index->flush();
 
         return $this->getDataSourceFactory()->createDataSource(
             'elastica',

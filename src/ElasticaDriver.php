@@ -111,8 +111,10 @@ class ElasticaDriver extends DriverAbstract
             $this->query->setPostFilter($this->filters);
         }
 
-        if ($limit > 0) {
+        if ($from > 0) {
             $this->query->setFrom($from);
+        }
+        if ($limit > 0) {
             $this->query->setSize($limit);
         }
 

@@ -98,7 +98,7 @@ class DriverOptionsTest extends BaseTest
             $documents[] = new Document($id, $fixture);
         }
         $type->addDocuments($documents);
-        $index->flush(true);
+        $index->flush();
 
         $this->dataSource = $this->getDataSourceFactory()->createDataSource(
             'elastica',
@@ -116,4 +116,4 @@ class DriverOptionsTest extends BaseTest
             ->addField('salary', 'number', 'gte')
             ->addField('about', 'text', 'match');
     }
-} 
+}
