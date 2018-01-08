@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o. <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 
 use Elastica\Aggregation\Sum;
@@ -16,9 +25,9 @@ class DriverOptionsTest extends BaseTest
         $this->prepareDataSource();
 
         $this->dataSource->clearFields();
-        $this->dataSource->addField('branch', 'number', 'eq', array('field' => 'branch.id'));
+        $this->dataSource->addField('branch', 'number', 'eq', ['field' => 'branch.id']);
 
-        $result = $this->filterDataSource(array('branch' => 2));
+        $result = $this->filterDataSource(['branch' => 2]);
         $this->assertEquals(2, count($result));
     }
 
@@ -34,10 +43,10 @@ class DriverOptionsTest extends BaseTest
 
         $this->dataSource->bindParameters(
             $this->parametersEnvelope(
-                array(
+                [
                     'name' => 'Jan',
                     'salary' => 111111
-                )
+                ]
             )
         );
         $result = $this->dataSource->getResult();
@@ -63,21 +72,21 @@ class DriverOptionsTest extends BaseTest
 
         $this->dataSource->bindParameters(
             $this->parametersEnvelope(
-                array(
+                [
                     'name' => 'Jan',
                     'salary' => 111111
-                )
+                ]
             )
         );
         $result = $this->dataSource->getResult();
 
         $this->assertTrue($result->hasAggregations());
 
-        $expectedAgg = array(
-            'salary_agg' => array(
+        $expectedAgg = [
+            'salary_agg' => [
                 'value' => 669761
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedAgg, $result->getAggregations());
     }
 
@@ -92,7 +101,7 @@ class DriverOptionsTest extends BaseTest
         $index->create();
         $type = $index->getType('test_type');
 
-        $documents = array();
+        $documents = [];
         $fixtures = require('Fixtures/documents.php');
         foreach ($fixtures as $id => $fixture) {
             $documents[] = new Document($id, $fixture);
@@ -102,12 +111,12 @@ class DriverOptionsTest extends BaseTest
 
         $this->dataSource = $this->getDataSourceFactory()->createDataSource(
             'elastica',
-            array(
+            [
                 'searchable' => $client->getIndex('test_index')->getType('test_type'),
                 'master_query' => $masterQuery,
                 'query' => $matchQuery,
                 'filter' => $termFilter,
-            )
+            ]
         );
 
         $this->dataSource

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o. <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
 use Elastica\Query;
@@ -8,14 +17,8 @@ use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
 
 class Text extends AbstractField implements ElasticaFieldInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $comparisons = array('match');
+    protected $comparisons = ['match'];
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildQuery(BoolQuery $query, BoolQuery $filter)
     {
         $data = $this->getCleanParameter();
@@ -38,25 +41,19 @@ class Text extends AbstractField implements ElasticaFieldInterface
         $query->addMust($match);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return 'text';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function initOptions()
     {
         parent::initOptions();
 
         $this->getOptionsResolver()
-            ->setDefaults(array('operator' => 'or'))
-            ->setAllowedTypes('field', array('array', 'string', 'null'))
-            ->setAllowedValues('operator', array('or', 'and'))
+            ->setDefaults(['operator' => 'or'])
+            ->setAllowedTypes('field', ['array', 'string', 'null'])
+            ->setAllowedValues('operator', ['or', 'and'])
         ;
     }
 }

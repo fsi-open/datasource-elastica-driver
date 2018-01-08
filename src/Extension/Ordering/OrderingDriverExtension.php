@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o. <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Ordering;
 
 use FSi\Component\DataSource\Extension\Core\Ordering\Driver\DriverExtension;
@@ -13,37 +22,25 @@ use FSi\Component\DataSource\Event\DriverEvent;
  */
 class OrderingDriverExtension extends DriverExtension implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getExtendedDriverTypes()
     {
-        return array('elastica');
+        return ['elastica'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function loadFieldTypesExtensions()
     {
-        return array(
+        return [
             new FieldExtension(),
-        );
+        ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
-        return array(
-            DriverEvents::PRE_GET_RESULT => array('preGetResult'),
-        );
+        return [
+            DriverEvents::PRE_GET_RESULT => ['preGetResult'],
+        ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preGetResult(DriverEvent\DriverEventArgs $event)
     {
         $fields = $event->getFields();
@@ -58,7 +55,7 @@ class OrderingDriverExtension extends DriverExtension implements EventSubscriber
             }
 
             $field = $fields[$fieldName];
-            $query->addSort(array($field->getOption('field') => array('order' => $direction)));
+            $query->addSort([$field->getOption('field') => ['order' => $direction]]);
         }
     }
 }

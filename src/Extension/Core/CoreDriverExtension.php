@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o. <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core;
 
 use FSi\Component\DataSource\Driver\DriverAbstractExtension;
@@ -13,21 +22,14 @@ use FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field\Time;
 
 class CoreDriverExtension extends DriverAbstractExtension
 {
-
-    /**
-     * {@inheritdoc}
-     */
     public function getExtendedDriverTypes()
     {
-        return array('elastica');
+        return ['elastica'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function loadFieldTypes()
     {
-        return array(
+        return [
             new Boolean(),
             new Date(),
             new DateTime(),
@@ -35,6 +37,6 @@ class CoreDriverExtension extends DriverAbstractExtension
             new Number(),
             new Text(),
             new Time(),
-        );
+        ];
     }
 }

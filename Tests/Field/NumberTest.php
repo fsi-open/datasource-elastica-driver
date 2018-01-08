@@ -1,14 +1,20 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o. <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Driver\Elastica\Tests\Field;
 
 use FSi\Component\DataSource\Driver\Elastica\Tests\BaseTest;
 
 class NumberTest extends BaseTest
 {
-    /**
-     * {@inheritdoc}
-     */
     public function setUp()
     {
         $this->dataSource = $this->prepareIndex('datetime_index', 'datetime_type');
@@ -18,20 +24,20 @@ class NumberTest extends BaseTest
     {
         $this->dataSource->addField('salary', 'number', 'eq');
 
-        $result = $this->filterDataSource(array('salary' => ''));
+        $result = $this->filterDataSource(['salary' => '']);
         $this->assertEquals(11, count($result));
 
-        $result = $this->filterDataSource(array('salary' => null));
+        $result = $this->filterDataSource(['salary' => null]);
         $this->assertEquals(11, count($result));
 
-        $result = $this->filterDataSource(array('salary' => array()));
+        $result = $this->filterDataSource(['salary' => []]);
         $this->assertEquals(11, count($result));
     }
 
     public function testFilterByNumberEq()
     {
         $this->dataSource->addField('salary', 'number', 'eq');
-        $result = $this->filterDataSource(array('salary' => 222222));
+        $result = $this->filterDataSource(['salary' => 222222]);
 
         $this->assertEquals(2, count($result));
     }
@@ -39,7 +45,7 @@ class NumberTest extends BaseTest
     public function testFilterByNumberGt()
     {
         $this->dataSource->addField('salary', 'number', 'gt');
-        $result = $this->filterDataSource(array('salary' => 111111));
+        $result = $this->filterDataSource(['salary' => 111111]);
 
         $this->assertEquals(3, count($result));
     }
@@ -47,7 +53,7 @@ class NumberTest extends BaseTest
     public function testFilterByNumberGte()
     {
         $this->dataSource->addField('salary', 'number', 'gte');
-        $result = $this->filterDataSource(array('salary' => 222222));
+        $result = $this->filterDataSource(['salary' => 222222]);
 
         $this->assertEquals(3, count($result));
     }
@@ -55,7 +61,7 @@ class NumberTest extends BaseTest
     public function testFilterByNumberLt()
     {
         $this->dataSource->addField('salary', 'number', 'lt');
-        $result = $this->filterDataSource(array('salary' => 345));
+        $result = $this->filterDataSource(['salary' => 345]);
 
         $this->assertEquals(2, count($result));
     }
@@ -63,7 +69,7 @@ class NumberTest extends BaseTest
     public function testFilterByNumberLte()
     {
         $this->dataSource->addField('salary', 'number', 'lte');
-        $result = $this->filterDataSource(array('salary' => 345));
+        $result = $this->filterDataSource(['salary' => 345]);
 
         $this->assertEquals(3, count($result));
     }
@@ -71,11 +77,7 @@ class NumberTest extends BaseTest
     public function testFilterByNumberBetween()
     {
         $this->dataSource->addField('salary', 'number', 'between');
-        $result = $this->filterDataSource(
-            array(
-                'salary' => array(123, 783)
-            )
-        );
+        $result = $this->filterDataSource(['salary' => [123, 783]]);
 
         $this->assertEquals(7, count($result));
     }

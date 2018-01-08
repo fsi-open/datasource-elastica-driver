@@ -1,60 +1,63 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o. <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Driver\Elastica;
 
+use Elastica\Query;
 use Elastica\Query\AbstractQuery;
 use Elastica\Query\BoolQuery;
-use Elastica\Query;
+use Elastica\ResultSet;
 use Elastica\SearchableInterface;
 use FSi\Component\DataSource\Driver\DriverAbstract;
+use RuntimeException;
 
 class ElasticaDriver extends DriverAbstract
 {
     /**
-     * @var \Elastica\Query\BoolQuery
+     * @var BoolQuery
      */
     private $filters;
 
     /**
-     * @var \Elastica\Query\BoolQuery
+     * @var BoolQuery
      */
     private $subQueries;
 
     /**
-     * @var \Elastica\Query
+     * @var Query
      */
     private $query;
 
     /**
-     * @var \Elastica\SearchableInterface
+     * @var SearchableInterface
      */
     private $searchable;
 
     /**
-     * @var \Elastica\Query\AbstractQuery
+     * @var AbstractQuery
      */
     private $userSubQuery;
 
     /**
-     * @var \Elastica\Query\AbstractQuery
+     * @var AbstractQuery
      */
     private $userFilter;
 
     /**
-     * @var \Elastica\Query
+     * @var Query
      */
     private $masterQuery;
 
-    /**
-     * @param $extensions array with extensions
-     * @param SearchableInterface $searchable
-     * @param AbstractQuery $userSubQuery
-     * @param AbstractQuery $userFilter
-     * @param Query $masterQuery
-     * @throws \FSi\Component\DataSource\Exception\DataSourceException
-     */
     public function __construct(
-        $extensions,
+        array $extensions,
         SearchableInterface $searchable,
         AbstractQuery $userSubQuery = null,
         AbstractQuery $userFilter = null,
@@ -68,9 +71,6 @@ class ElasticaDriver extends DriverAbstract
         $this->masterQuery = $masterQuery;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function initResult()
     {
         $this->subQueries = new BoolQuery();
@@ -78,10 +78,7 @@ class ElasticaDriver extends DriverAbstract
         $this->query = ($this->masterQuery === null) ? new Query() : $this->masterQuery;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildResult($fields, $from, $limit)
+    public function buildResult($fields, $from, $limit): ResultSet
     {
         if ($this->userFilter !== null) {
             $this->filters->addMust($this->userFilter);
@@ -89,9 +86,10 @@ class ElasticaDriver extends DriverAbstract
 
         foreach ($fields as $field) {
             if (!$field instanceof ElasticaFieldInterface) {
-                throw new \RuntimeException(
-                    sprintf('All fields must be instances of \FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface')
-                );
+                throw new RuntimeException(sprintf(
+                    'All fields must be instances of "%s"',
+                    ElasticaFieldInterface::class
+                ));
             }
 
             $field->buildQuery($this->subQueries, $this->filters);
@@ -123,21 +121,15 @@ class ElasticaDriver extends DriverAbstract
         return $resultSet;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return 'elastica';
     }
 
-    /**
-     * @return \Elastica\Query
-     */
-    public function getQuery()
+    public function getQuery(): Query
     {
         if (!$this->query) {
-            throw new \RuntimeException('Query is accessible only during preGetResult event.');
+            throw new RuntimeException('Query is accessible only during preGetResult event.');
         }
 
         return $this->query;

@@ -1,13 +1,26 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o. <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Driver\Elastica;
 
+use ArrayIterator;
+use Iterator;
+use Countable;
 use Elastica\ResultSet;
+use IteratorAggregate;
 
-class ElasticaResult implements \IteratorAggregate, \Countable
+class ElasticaResult implements IteratorAggregate, Countable
 {
     /**
-     * @var \Elastica\ResultSet
+     * @var ResultSet
      */
     private $resultSet;
 
@@ -16,43 +29,27 @@ class ElasticaResult implements \IteratorAggregate, \Countable
         $this->resultSet = $resultSet;
     }
 
-    public function count()
+    public function count(): int
     {
         return $this->resultSet->getTotalHits();
     }
 
-    public function getIterator()
+    public function getIterator(): Iterator
     {
-        return new \ArrayIterator($this->resultSet->getResults());
+        return new ArrayIterator($this->resultSet->getResults());
     }
 
-    /**
-     * Returns whether aggregations exist
-     *
-     * @return boolean Aggregation existence
-     */
-    public function hasAggregations()
+    public function hasAggregations(): bool
     {
         return $this->resultSet->hasAggregations();
     }
 
-    /**
-     * Returns all aggregation results
-     *
-     * @return array
-     */
-    public function getAggregations()
+    public function getAggregations(): array
     {
         return $this->resultSet->getAggregations();
     }
 
-    /**
-     * Retrieve a specific aggregation from this result set
-     * @param string $name the name of the desired aggregation
-     * @return array
-     * @throws \Elastica\Exception\InvalidException if an aggregation by the given name cannot be found
-     */
-    public function getAggregation($name)
+    public function getAggregation($name): array
     {
         return $this->resultSet->getAggregation($name);
     }
