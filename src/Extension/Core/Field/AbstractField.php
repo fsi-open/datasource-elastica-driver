@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o. <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
 use FSi\Component\DataSource\Driver\Elastica\Exception\ElasticaDriverException;
@@ -11,9 +20,6 @@ use Elastica\Query\Terms;
 
 abstract class AbstractField extends FieldAbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function buildQuery(BoolQuery $query, BoolQuery $filter)
     {
         $data = $this->getCleanParameter();
@@ -42,13 +48,13 @@ abstract class AbstractField extends FieldAbstractType
                 }
                 $from = array_shift($data);
                 $to = array_shift($data);
-                $filter->addMust(new Range($fieldPath, array('gte' => $from, 'lte' => $to)));
+                $filter->addMust(new Range($fieldPath, ['gte' => $from, 'lte' => $to]));
                 break;
             case 'lt':
             case 'lte':
             case 'gt':
             case 'gte':
-                $filter->addMust(new Range($fieldPath, array($this->getComparison() => $data)));
+                $filter->addMust(new Range($fieldPath, [$this->getComparison() => $data]));
                 break;
             case 'in':
                 $filter->addMust(
@@ -69,15 +75,12 @@ abstract class AbstractField extends FieldAbstractType
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function initOptions()
     {
         $field = $this;
         $this->getOptionsResolver()
             ->setDefault('field', null)
-            ->setAllowedTypes('field', array('string', 'null'))
+            ->setAllowedTypes('field', ['string', 'null'])
             ->setNormalizer('field', function ($options, $value) use ($field) {
                 if (!empty($value)) {
                     return $value;
@@ -93,12 +96,12 @@ abstract class AbstractField extends FieldAbstractType
         return $this->getOption('field');
     }
 
-    protected function isEmpty($data)
+    protected function isEmpty($data): bool
     {
         if (is_array($data)) {
             $data = array_filter($data);
         }
 
-        return ($data === array() || $data === '' || $data === null);
+        return ($data === [] || $data === '' || $data === null);
     }
 }

@@ -1,19 +1,25 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o. <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 
 use FSi\Component\DataSource\Extension\Core\Ordering\OrderingExtension;
 
 class FetchAndOrderTest extends BaseTest
 {
-    /**
-     * {@inheritdoc}
-     */
     public function setUp()
     {
-        $this->dataSource = $this->prepareIndex('test_index', 'test_type', array(
-            'surname' => array('type' => 'text', 'fielddata' => true),
-        ));
+        $this->dataSource = $this->prepareIndex('test_index', 'test_type', [
+            'surname' => ['type' => 'text', 'fielddata' => true],
+        ]);
         $this->dataSource
             ->addField('surname', 'text', 'match')
             ->addField('active', 'boolean', 'eq')
@@ -45,11 +51,11 @@ class FetchAndOrderTest extends BaseTest
     {
         $this->dataSource->bindParameters(
             $this->parametersEnvelope(
-                array(
+                [
                     'about' => 'lorem',
                     'active' => false,
                     'salary' => 222222
-                )
+                ]
             )
         );
         $result = $this->dataSource->getResult();
@@ -61,22 +67,22 @@ class FetchAndOrderTest extends BaseTest
     {
         $this->dataSource->setMaxResults(20);
         $this->dataSource->bindParameters(
-            array(
-                $this->dataSource->getName() => array(
-                    OrderingExtension::PARAMETER_SORT => array(
+            [
+                $this->dataSource->getName() => [
+                    OrderingExtension::PARAMETER_SORT => [
                         'salary' => 'asc',
                         'surname' => 'asc'
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
 
         $result = $this->dataSource->getResult();
 
         $this->assertEquals(11, count($result));
 
-        $expectedIds = array('p6', 'p10', 'p5', 'p8', 'p7', 'p11', 'p9', 'p1', 'p3', 'p2', 'p4');
-        $actualIds = array();
+        $expectedIds = ['p6', 'p10', 'p5', 'p8', 'p7', 'p11', 'p9', 'p1', 'p3', 'p2', 'p4'];
+        $actualIds = [];
         foreach ($result as $single) {
             /** @var \Elastica\Result $single */
             $actualIds[] = $single->getId();

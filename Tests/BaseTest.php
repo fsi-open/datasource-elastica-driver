@@ -1,56 +1,62 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o. <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 
+use Closure;
+use Elastica\Client;
+use Elastica\Document;
+use FSi\Component\DataSource\DataSource;
+use FSi\Component\DataSource\DataSourceFactory;
+use FSi\Component\DataSource\DataSourceFactory as BaseDataSourceFactory;
 use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\Driver\DriverFactoryManager;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaDriverFactory;
 use FSi\Component\DataSource\Driver\Elastica\Extension\Core\CoreDriverExtension;
 use FSi\Component\DataSource\Driver\Elastica\Extension\Indexing\IndexingDriverExtension;
 use FSi\Component\DataSource\Driver\Elastica\Extension\Ordering\OrderingDriverExtension;
-use FSi\Component\DataSource\Extension\Symfony;
 use FSi\Component\DataSource\Extension\Core;
 use FSi\Component\DataSource\Extension\Core\Ordering\OrderingExtension;
-use FSi\Component\DataSource\DataSourceFactory as BaseDataSourceFactory;
-use Elastica\Client;
-use Elastica\Document;
+use FSi\Component\DataSource\Extension\Symfony;
+use PHPUnit\Framework\TestCase;
 
-abstract class BaseTest extends \PHPUnit_Framework_TestCase
+abstract class BaseTest extends TestCase
 {
     /**
-     * @var \FSi\Component\DataSource\DataSource
+     * @var DataSource
      */
     protected $dataSource;
 
-    /**
-     * Return configured DataSourceFactory.
-     *
-     * @return \FSi\Component\DataSource\DataSourceFactory
-     */
-    protected function getDataSourceFactory()
+    protected function getDataSourceFactory(): BaseDataSourceFactory
     {
-        $driverExtensions = array(
+        $driverExtensions = [
             new CoreDriverExtension(),
             new OrderingDriverExtension(),
             new IndexingDriverExtension(),
-        );
+        ];
 
-        $driverFactoryManager = new DriverFactoryManager(
-            array(
-                new ElasticaDriverFactory($driverExtensions)
-            )
-        );
+        $driverFactoryManager = new DriverFactoryManager([
+            new ElasticaDriverFactory($driverExtensions)
+        ]);
 
-        $dataSourceExtensions = array(
+        $dataSourceExtensions = [
             new Symfony\Core\CoreExtension(),
             new Core\Pagination\PaginationExtension(),
             new OrderingExtension()
-        );
+        ];
 
         return new BaseDataSourceFactory($driverFactoryManager, $dataSourceExtensions);
     }
 
-    protected function filterDataSource($parameters)
+    protected function filterDataSource(array $parameters)
     {
         $this->dataSource->bindParameters(
             $this->parametersEnvelope($parameters)
@@ -59,17 +65,21 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
         return $this->dataSource->getResult();
     }
 
-    protected function parametersEnvelope(array $parameters)
+    protected function parametersEnvelope(array $parameters): array
     {
-        return array(
-            $this->dataSource->getName() => array(
+        return [
+            $this->dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => $parameters,
-            ),
-        );
+            ],
+        ];
     }
 
-    protected function prepareIndex($indexName, $typeName, $mapping = null, \Closure $transform = null)
-    {
+    protected function prepareIndex(
+        string $indexName,
+        string $typeName,
+        ?array $mapping = null,
+        ?Closure $transform = null
+    ): DataSourceInterface {
         $client  = new Client();
         $index = $client->getIndex($indexName);
         if ($index->exists()) {
@@ -81,7 +91,7 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
             $type->setMapping($mapping);
         }
 
-        $documents = array();
+        $documents = [];
         $fixtures = require(__DIR__ . '/Fixtures/documents.php');
         foreach ($fixtures as $id => $fixture) {
             if (null !== $transform) {
@@ -94,7 +104,7 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
 
         return $this->getDataSourceFactory()->createDataSource(
             'elastica',
-            array('searchable' => $type)
+            ['searchable' => $type]
         );
     }
 }

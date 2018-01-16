@@ -1,19 +1,30 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o. <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 
+use Elastica\SearchableInterface;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaDriver;
-use FSi\Component\DataSource\Driver\Elastica\Extension\Core\CoreDriverExtension;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
+use FSi\Component\DataSource\Driver\Elastica\Extension\Core\CoreDriverExtension;
 use FSi\Component\DataSource\Field\FieldTypeInterface;
+use PHPUnit\Framework\TestCase;
 
-class ElasticaDriverTest extends \PHPUnit_Framework_TestCase
+class ElasticaDriverTest extends TestCase
 {
     public function testDriverHasExtensions()
     {
         $driver = new ElasticaDriver(
-            array(new CoreDriverExtension()),
-            $this->getMock('Elastica\SearchableInterface')
+            [new CoreDriverExtension()],
+            $this->createMock(SearchableInterface::class)
         );
 
         $this->assertTrue($driver->hasFieldType('text'));
@@ -29,26 +40,25 @@ class ElasticaDriverTest extends \PHPUnit_Framework_TestCase
 
     public function fieldNameProvider()
     {
-        return array(
-            array('text'),
-            array('number'),
-            array('entity'),
-            array('date'),
-            array('time'),
-            array('datetime'),
-            array('boolean')
-        );
+        return [
+            ['text'],
+            ['number'],
+            ['entity'],
+            ['date'],
+            ['time'],
+            ['datetime'],
+            ['boolean']
+        ];
     }
 
     /**
      * @dataProvider fieldNameProvider
-     * @param $fieldName
      */
-    public function testFields($fieldName)
+    public function testFields(string $fieldName)
     {
         $driver = new ElasticaDriver(
-            array(new CoreDriverExtension()),
-            $this->getMock('Elastica\SearchableInterface')
+            [new CoreDriverExtension()],
+            $this->createMock(SearchableInterface::class)
         );
 
         $this->assertTrue($driver->hasFieldType($fieldName));
