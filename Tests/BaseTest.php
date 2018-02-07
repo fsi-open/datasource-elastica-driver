@@ -15,7 +15,6 @@ use Closure;
 use Elastica\Client;
 use Elastica\Document;
 use FSi\Component\DataSource\DataSource;
-use FSi\Component\DataSource\DataSourceFactory;
 use FSi\Component\DataSource\DataSourceFactory as BaseDataSourceFactory;
 use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\Driver\DriverFactoryManager;
@@ -25,7 +24,6 @@ use FSi\Component\DataSource\Driver\Elastica\Extension\Indexing\IndexingDriverEx
 use FSi\Component\DataSource\Driver\Elastica\Extension\Ordering\OrderingDriverExtension;
 use FSi\Component\DataSource\Extension\Core;
 use FSi\Component\DataSource\Extension\Core\Ordering\OrderingExtension;
-use FSi\Component\DataSource\Extension\Symfony;
 use PHPUnit\Framework\TestCase;
 
 abstract class BaseTest extends TestCase
@@ -48,7 +46,6 @@ abstract class BaseTest extends TestCase
         ]);
 
         $dataSourceExtensions = [
-            new Symfony\Core\CoreExtension(),
             new Core\Pagination\PaginationExtension(),
             new OrderingExtension()
         ];
