@@ -5,7 +5,11 @@ Experimental DataSource Driver for ElasticSearch
 ## Requirements
 This driver requires ES ^2.0
 
-## Use in Symfony2 Application
+## Installation for Symfony Application
+
+```sh
+composer require fsi/datasource-elastica-driver
+```
 
 Service definition (`elastica-driver.xml`):
 
@@ -15,12 +19,6 @@ Service definition (`elastica-driver.xml`):
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-    <parameters>
-        <parameter key="datasource.driver.extension.class">FSi\Component\DataSource\Extension\Symfony\DependencyInjection\Driver\DriverExtension</parameter>
-        <parameter key="datasource.driver.elastica.factory.class">FSi\Component\DataSource\Driver\Elastica\ElasticaDriverFactory</parameter>
-    </parameters>
-
     <services>
         <service id="datasource.driver.factory.manager" class="%datasource.driver.factory.manager.class%">
             <argument type="collection">
@@ -31,8 +29,7 @@ Service definition (`elastica-driver.xml`):
         </service>
 
         <!-- DataSource Elastica Extensions -->
-        <service id="datasource.driver.elastica.extension" class="%datasource.driver.extension.class%">
-            <argument type="service" id="service_container" />
+        <service id="datasource.driver.elastica.extension" class="FSi\Bundle\DataSourceBundle\DataSource\Extension\Symfony\DependencyInjection\Driver\DriverExtension">
             <argument type="string">elastica</argument>
             <!-- All services with tag "datasource.driver.elastica.field" are inserted here by DataSourcePass -->
             <argument type="collection" />
@@ -44,7 +41,7 @@ Service definition (`elastica-driver.xml`):
         </service>
 
         <!-- DataSource Elastica Factory -->
-        <service id="datasource.driver.elastica.factory" class="%datasource.driver.elastica.factory.class%">
+        <service id="datasource.driver.elastica.factory" class="FSi\Component\DataSource\Driver\Elastica\ElasticaDriverFactory">
             <argument type="collection">
                 <!--
                 We don't need to be able to add more extensions.
@@ -87,14 +84,16 @@ Service definition (`elastica-driver.xml`):
         <service id="datasource.driver.elastica.field.subscriber.ordering" class="FSi\Component\DataSource\Extension\Core\Ordering\Field\FieldExtension">
             <tag name="datasource.driver.elastica.field.subscriber" alias="ordering" />
         </service>
+        
+        <!-- OPTIONAL Indexing Extension -->
+        <service id="datasource.driver.elastica.subscriber.indexing" class="FSi\Component\DataSource\Driver\Elastica\Extension\Indexing\IndexingDriverExtension">
+            <tag name="datasource.driver.elastica.subscriber" alias="indexing" />
+        </service>
 
         <!-- Symfony/FormExtension -->
-        <service id="datasource.driver.elastica.field.subscriber.symfonyform" class="FSi\Component\DataSource\Extension\Symfony\Form\Field\FormFieldExtension">
+        <service id="datasource.driver.elastica.field.subscriber.symfonyform" class="FSi\Bundle\DataSourceBundle\DataSource\Extension\Symfony\Form\Field\FormFieldExtension">
             <tag name="datasource.driver.elastica.field.subscriber" alias="symfonyform" />
             <argument type="service" id="form.factory" />
-        </service>
-        <service id="datasource.driver.elastica.field.subscriber.symfony_null_form" class="FSi\Bundle\DataSourceBundle\DataSource\Extension\Symfony\Form\Field\FormFieldExtension">
-            <tag name="datasource.driver.elastica.field.subscriber" alias="symfony_null_form" />
             <argument type="service" id="translator" />
         </service>
     </services>
@@ -121,4 +120,16 @@ class FsiDemoExtension extends Extension
         $xmlLoader->load('elastica-driver.xml');
     }
 }
+```
+
+## Usage
+
+```php
+$dataSource = $this->dataSourceFactory->createDataSource('elastica', [
+    'searchable' => $elasticaType, // instance of \Elastica\SearchableInterface
+    'query' => null,
+    'filter' => null,
+    'master_query' => null,
+], 'datasource_id');
+
 ```
