@@ -32,6 +32,7 @@ class Text extends AbstractField implements ElasticaFieldInterface
             $match->setFields($field);
             $match->setQuery($data);
             $match->setOperator($this->getOption('operator'));
+            $match->setParam('lenient', $this->getOption('lenient'));
         } else {
             $match = new Query\Match();
             $match->setFieldQuery($field, $data);
@@ -54,6 +55,8 @@ class Text extends AbstractField implements ElasticaFieldInterface
             ->setDefaults(['operator' => 'or'])
             ->setAllowedTypes('field', ['array', 'string', 'null'])
             ->setAllowedValues('operator', ['or', 'and'])
+            ->setDefaults(['lenient' => false])
+            ->setAllowedTypes('lenient', 'bool')
         ;
     }
 }
