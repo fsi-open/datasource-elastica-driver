@@ -1,10 +1,12 @@
 language: php
 
 cache:
-  apt: true
   directories:
     - vendor
     - bin
+env:
+  global:
+    - SYMFONY_DEPRECATIONS_HELPER=weak
 
 matrix:
   include:
