@@ -7,21 +7,27 @@ cache:
 env:
   global:
     - SYMFONY_DEPRECATIONS_HELPER=weak
+    - ELASTICSEARCH_PORT=9200
+  matrix:
+    - COMPOSER_PREFER_LOWEST="--prefer-lowest"
+    - COMPOSER_PREFER_LOWEST=""
 
-matrix:
-  include:
-    - php: 7.1
-      env:
-        - COMPOSER_FLAGS='--prefer-lowest'
-    - php: 7.1
+php:
+  - 7.1
+  - 7.2
+  - 7.3
+  - 7.4
 
-before_install:
-  - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.3.1.deb
-  - sudo dpkg -i --force-confnew elasticsearch-5.3.1.deb
-  - sudo service elasticsearch restart
+before_install: #from this answer https://stackoverflow.com/a/55951532/2254668
+  - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.8.8.deb
+  - sudo dpkg -i --force-confnew elasticsearch-6.8.8.deb
+  - sudo sed -i.old 's/-Xms1g/-Xms128m/' /etc/elasticsearch/jvm.options
+  - sudo sed -i.old 's/-Xmx1g/-Xmx128m/' /etc/elasticsearch/jvm.options
+  - echo -e '-XX:+DisableExplicitGC\n-Djdk.io.permissionsUseCanonicalPath=true\n-Dlog4j.skipJansi=true\n-server\n' | sudo tee -a /etc/elasticsearch/jvm.options
+  - sudo chown -R elasticsearch:elasticsearch /etc/default/elasticsearch
+  - sudo systemctl start elasticsearch
 
 before_script:
-  - sleep 10 # for elasticsearch (from travis documentation)
-  - composer update $COMPOSER_FLAGS
-
+  - composer update $COMPOSER_PREFER_LOWEST
+  - host="localhost:$ELASTICSEARCH_PORT";response="";attempt=0;until [ "$response" = "200" ];do if [ $attempt -ge 25 ];then echo "FAILED. Elasticsearch not responding after $attempt tries.";exit 1;fi;echo "Contacting Elasticsearch on ${host}. Try number ${attempt}";response=$(curl --write-out %{http_code} --silent --output /dev/null "$host");sleep 1;attempt=$[$attempt+1];done; #https://stackoverflow.com/a/57485960/2254668
 script: bin/phpunit

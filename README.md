@@ -3,7 +3,7 @@
 Experimental DataSource Driver for ElasticSearch
 
 ## Requirements
-This driver requires ES ^2.0
+This driver requires ES ^6.2
 
 ## Installation for Symfony Application
 
@@ -132,4 +132,18 @@ $dataSource = $this->dataSourceFactory->createDataSource('elastica', [
     'master_query' => null,
 ], 'datasource_id');
 
+```
+
+## Testing
+
+Run ElasticSearch service on 9020 port using Docker:
+```bash
+docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.8.8
+```
+or via normal installation:
+```bash
+cd `mktemp -d`
+curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.8.8.deb
+sudo dpkg -i --force-confnew elasticsearch-6.8.8.deb
+sudo systemctl start elasticsearch.service
 ```

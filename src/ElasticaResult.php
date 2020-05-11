@@ -36,7 +36,13 @@ class ElasticaResult implements IteratorAggregate, Countable
 
     public function getIterator(): Iterator
     {
-        return new ArrayIterator($this->resultSet->getResults());
+        /**
+         * Since https://github.com/ruflin/Elastica/pull/1506
+         *  ResultSet implements Iterator interface
+         */
+        return $this->resultSet instanceof Iterator
+            ? $this->resultSet
+            : new ArrayIterator($this->resultSet->getResults());
     }
 
     public function hasAggregations(): bool
