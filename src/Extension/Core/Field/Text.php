@@ -34,7 +34,7 @@ class Text extends AbstractField implements ElasticaFieldInterface
             $match->setOperator($this->getOption('operator'));
             $match->setParam('lenient', $this->getOption('lenient'));
         } else {
-            $match = new Query\Match();
+            $match = new Query\MatchQuery();
             $match->setFieldQuery($field, $data);
             $match->setFieldOperator($field, $this->getOption('operator'));
         }

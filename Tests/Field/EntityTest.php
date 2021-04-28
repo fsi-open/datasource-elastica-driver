@@ -16,9 +16,9 @@ use FSi\Component\DataSource\Driver\Elastica\Tests\Fixtures\Branch;
 
 class EntityTest extends BaseTest
 {
-    public function setUp()
+    public function setUp(): void
     {
-        $this->dataSource = $this->prepareIndex('entity_index', 'entity_type', null, function ($fixture) {
+        $this->dataSource = $this->prepareIndex('entity_index', [], function ($fixture) {
             $fixture['branch']['idx'] = $fixture['branch']['id'];
 
             return $fixture;

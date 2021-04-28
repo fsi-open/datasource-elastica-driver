@@ -15,9 +15,9 @@ use FSi\Component\DataSource\Driver\Elastica\Tests\BaseTest;
 
 class DateTimeTest extends BaseTest
 {
-    public function setUp()
+    public function setUp(): void
     {
-        $this->dataSource = $this->prepareIndex('datetime_index', 'datetime_type');
+        $this->dataSource = $this->prepareIndex('datetime_index');
     }
 
     public function testFilterByEmptyParameter()

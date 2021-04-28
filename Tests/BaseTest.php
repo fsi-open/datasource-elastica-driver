@@ -14,6 +14,7 @@ namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 use Closure;
 use Elastica\Client;
 use Elastica\Document;
+use Elastica\Mapping;
 use FSi\Component\DataSource\DataSource;
 use FSi\Component\DataSource\DataSourceFactory as BaseDataSourceFactory;
 use FSi\Component\DataSource\DataSourceInterface;
@@ -73,8 +74,7 @@ abstract class BaseTest extends TestCase
 
     protected function prepareIndex(
         string $indexName,
-        string $typeName,
-        ?array $mapping = null,
+        array $mapping = [],
         ?Closure $transform = null
     ): DataSourceInterface {
         $client  = new Client();
@@ -83,9 +83,8 @@ abstract class BaseTest extends TestCase
             $index->delete();
         }
         $index->create();
-        $type = $index->getType($typeName);
-        if (null !== $mapping && is_array($mapping)) {
-            $type->setMapping($mapping);
+        if (count($mapping) > 0) {
+            $index->setMapping(new Mapping($mapping));
         }
 
         $documents = [];
@@ -96,12 +95,12 @@ abstract class BaseTest extends TestCase
             }
             $documents[] = new Document($id, $fixture);
         }
-        $type->addDocuments($documents);
-        $index->flush();
+        $index->addDocuments($documents);
+        $index->refresh();
 
         return $this->getDataSourceFactory()->createDataSource(
             'elastica',
-            ['searchable' => $type]
+            ['searchable' => $index]
         );
     }
 }

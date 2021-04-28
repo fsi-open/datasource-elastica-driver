@@ -15,12 +15,12 @@ use FSi\Component\DataSource\Driver\Elastica\Tests\BaseTest;
 
 class TimeTest extends BaseTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         $mapping = [
             'timestamp' => ['type' => 'date', 'format' => 'basic_time_no_millis'],
         ];
-        $this->dataSource = $this->prepareIndex('time_index', 'time_index', $mapping, function ($fixture) {
+        $this->dataSource = $this->prepareIndex('time_index', $mapping, function ($fixture) {
             $time = new \DateTime($fixture['timestamp']);
             $fixture['timestamp'] = $time->format('HisO');
 

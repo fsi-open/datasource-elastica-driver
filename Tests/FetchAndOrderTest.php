@@ -15,9 +15,9 @@ use FSi\Component\DataSource\Extension\Core\Ordering\OrderingExtension;
 
 class FetchAndOrderTest extends BaseTest
 {
-    public function setUp()
+    public function setUp(): void
     {
-        $this->dataSource = $this->prepareIndex('test_index', 'test_type', [
+        $this->dataSource = $this->prepareIndex('test_index', [
             'surname' => ['type' => 'text', 'fielddata' => true],
         ]);
         $this->dataSource

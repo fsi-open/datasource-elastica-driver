@@ -15,9 +15,9 @@ use FSi\Component\DataSource\Driver\Elastica\Tests\BaseTest;
 
 class BooleanTest extends BaseTest
 {
-    public function setUp()
+    public function setUp(): void
     {
-        $this->dataSource = $this->prepareIndex('text_index', 'text_type');
+        $this->dataSource = $this->prepareIndex('text_index');
         $this->dataSource->addField('active', 'boolean', 'eq');
     }
 
