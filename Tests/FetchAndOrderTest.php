@@ -37,7 +37,7 @@ class FetchAndOrderTest extends BaseTest
         $this->dataSource->setMaxResults(5);
         $results = $this->dataSource->getResult();
 
-        $this->assertEquals(11, count($results));
+        $this->assertCount(11, $results);
 
         $pageResultCount = 0;
         foreach ($results as $result) {
@@ -60,7 +60,7 @@ class FetchAndOrderTest extends BaseTest
         );
         $result = $this->dataSource->getResult();
 
-        $this->assertEquals(2, count($result));
+        $this->assertCount(2, $result);
     }
 
     public function testOrdering()
@@ -79,7 +79,7 @@ class FetchAndOrderTest extends BaseTest
 
         $result = $this->dataSource->getResult();
 
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
 
         $expectedIds = ['p6', 'p10', 'p5', 'p8', 'p7', 'p11', 'p9', 'p1', 'p3', 'p2', 'p4'];
         $actualIds = [];

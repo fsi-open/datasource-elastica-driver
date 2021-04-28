@@ -28,7 +28,7 @@ class DriverOptionsTest extends BaseTest
         $this->dataSource->addField('branch', 'number', 'eq', ['field' => 'branch.id']);
 
         $result = $this->filterDataSource(['branch' => 2]);
-        $this->assertEquals(2, count($result));
+        $this->assertCount(2, $result);
     }
 
     public function testUseUserProvidedQueryAndFilter()
@@ -51,7 +51,7 @@ class DriverOptionsTest extends BaseTest
         );
         $result = $this->dataSource->getResult();
 
-        $this->assertEquals(2, count($result));
+        $this->assertCount(2, $result);
     }
 
     public function testUserProvidedMasterQuery()

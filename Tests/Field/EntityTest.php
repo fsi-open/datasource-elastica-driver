@@ -29,20 +29,20 @@ class EntityTest extends BaseTest
     public function testFilterByEmptyParameter()
     {
         $result = $this->filterDataSource(['branch' => '']);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
 
         $result = $this->filterDataSource(['branch' => null]);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
 
         $result = $this->filterDataSource(['branch' => []]);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
     }
 
     public function testFindItemsByEntity()
     {
         $result = $this->filterDataSource(['branch' => new Branch(2)]);
 
-        $this->assertEquals(2, count($result));
+        $this->assertCount(2, $result);
     }
 
     public function testFindItemsByEntityWithNonStandardId()
@@ -53,6 +53,6 @@ class EntityTest extends BaseTest
         ]);
         $result = $this->filterDataSource(['branch' => new Branch(null, 2)]);
 
-        $this->assertEquals(2, count($result));
+        $this->assertCount(2, $result);
     }
 }

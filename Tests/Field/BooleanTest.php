@@ -24,19 +24,19 @@ class BooleanTest extends BaseTest
     public function testFilterByEmptyParameter()
     {
         $result = $this->filterDataSource(['about' => '']);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
 
         $result = $this->filterDataSource(['about' => null]);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
 
         $result = $this->filterDataSource(['about' => []]);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
     }
 
     public function testFilterByBoolean()
     {
         $result = $this->filterDataSource(['active' => true]);
 
-        $this->assertEquals(3, count($result));
+        $this->assertCount(3, $result);
     }
 }
