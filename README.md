@@ -138,5 +138,5 @@ $dataSource = $this->dataSourceFactory->createDataSource('elastica', [
 
 ```sh
 docker-compose up
-php bin/phpunit
+php vendor/bin/phpunit
 ```
