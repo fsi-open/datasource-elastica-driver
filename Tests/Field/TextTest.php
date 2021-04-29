@@ -15,36 +15,36 @@ use FSi\Component\DataSource\Driver\Elastica\Tests\BaseTest;
 
 class TextTest extends BaseTest
 {
-    public function setUp()
+    public function setUp(): void
     {
-        $this->dataSource = $this->prepareIndex('text_index', 'text_type');
+        $this->dataSource = $this->prepareIndex('text_index');
         $this->dataSource->addField('about', 'text', 'match');
     }
 
     public function testFilterByEmptyParameter()
     {
         $result = $this->filterDataSource(['about' => '']);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
 
         $result = $this->filterDataSource(['about' => null]);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
 
         $result = $this->filterDataSource(['about' => []]);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
     }
 
     public function testFindItemsBySingleWord()
     {
         $result = $this->filterDataSource(['about' => 'lorem']);
 
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
     }
 
     public function testFindItemsByMultipleWord()
     {
         $result = $this->filterDataSource(['about' => 'lorem dolor']);
 
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
     }
 
     public function testFindByMultipleFields()
@@ -54,7 +54,7 @@ class TextTest extends BaseTest
 
         $result = $this->filterDataSource(['multi' => 'MarkA Janusz']);
 
-        $this->assertEquals(3, count($result));
+        $this->assertCount(3, $result);
     }
 
     public function testFindItemsByMultipleWordWithAndOperator()
@@ -63,6 +63,6 @@ class TextTest extends BaseTest
         $this->dataSource->addField('about', 'text', 'match', ['operator' => 'and']);
         $result = $this->filterDataSource(['about' => 'MarkA MarkC']);
 
-        $this->assertEquals(1, count($result));
+        $this->assertCount(1, $result);
     }
 }

@@ -1,9 +1,10 @@
 # DataSource Elastica Driver
 
-Experimental DataSource Driver for ElasticSearch
+DataSource Driver for ElasticSearch
 
 ## Requirements
-This driver requires ES ^2.0
+
+This driver requires ES ^7.0
 
 ## Installation for Symfony Application
 
@@ -126,10 +127,16 @@ class FsiDemoExtension extends Extension
 
 ```php
 $dataSource = $this->dataSourceFactory->createDataSource('elastica', [
-    'searchable' => $elasticaType, // instance of \Elastica\SearchableInterface
+    'searchable' => $elasticaIndex, // instance of \Elastica\SearchableInterface
     'query' => null,
     'filter' => null,
     'master_query' => null,
 ], 'datasource_id');
 
+```
+## Tests
+
+```sh
+docker-compose up
+php vendor/bin/phpunit
 ```

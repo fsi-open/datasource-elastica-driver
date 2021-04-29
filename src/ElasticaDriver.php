@@ -116,9 +116,7 @@ class ElasticaDriver extends DriverAbstract
             $this->query->setSize($limit);
         }
 
-        $resultSet = $this->searchable->search($this->query);
-
-        return $resultSet;
+        return $this->searchable->search(Query::create($this->query));
     }
 
     public function getType()

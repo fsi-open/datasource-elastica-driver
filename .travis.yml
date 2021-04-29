@@ -10,18 +10,20 @@ env:
 
 matrix:
   include:
-    - php: 7.1
+    - php: 7.4
       env:
         - COMPOSER_FLAGS='--prefer-lowest'
-    - php: 7.1
+    - php: 7.4
+    - php: 8.0
 
 before_install:
-  - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.3.1.deb
-  - sudo dpkg -i --force-confnew elasticsearch-5.3.1.deb
+  - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.1-amd64.deb
+  - sudo dpkg -i --force-confnew elasticsearch-7.10.1-amd64.deb
+  - sudo chown -R elasticsearch:elasticsearch /etc/default/elasticsearch
   - sudo service elasticsearch restart
 
 before_script:
   - sleep 10 # for elasticsearch (from travis documentation)
   - composer update $COMPOSER_FLAGS
 
-script: bin/phpunit
+script: vendor/bin/phpunit

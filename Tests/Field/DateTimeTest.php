@@ -15,9 +15,9 @@ use FSi\Component\DataSource\Driver\Elastica\Tests\BaseTest;
 
 class DateTimeTest extends BaseTest
 {
-    public function setUp()
+    public function setUp(): void
     {
-        $this->dataSource = $this->prepareIndex('datetime_index', 'datetime_type');
+        $this->dataSource = $this->prepareIndex('datetime_index');
     }
 
     public function testFilterByEmptyParameter()
@@ -25,13 +25,13 @@ class DateTimeTest extends BaseTest
         $this->dataSource->addField('timestamp', 'datetime', 'eq');
 
         $result = $this->filterDataSource(['timestamp' => '']);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
 
         $result = $this->filterDataSource(['timestamp' => null]);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
 
         $result = $this->filterDataSource(['timestamp' => []]);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
     }
 
     public function testFilterByDateTimeEq()
@@ -39,7 +39,7 @@ class DateTimeTest extends BaseTest
         $this->dataSource->addField('timestamp', 'datetime', 'eq');
         $result = $this->filterDataSource(['timestamp' => new \DateTime('2014-06-02T22:02:16+0200')]);
 
-        $this->assertEquals(1, count($result));
+        $this->assertCount(1, $result);
     }
 
     public function testFilterByDateTimeGt()
@@ -47,7 +47,7 @@ class DateTimeTest extends BaseTest
         $this->dataSource->addField('timestamp', 'datetime', 'gt');
         $result = $this->filterDataSource(['timestamp' => new \DateTime('2014-06-01T23:01:16+0200')]);
 
-        $this->assertEquals(10, count($result));
+        $this->assertCount(10, $result);
     }
 
     public function testFilterByDateTimeGte()
@@ -55,7 +55,7 @@ class DateTimeTest extends BaseTest
         $this->dataSource->addField('timestamp', 'datetime', 'gte');
         $result = $this->filterDataSource(['timestamp' => new \DateTime('2014-06-09T15:09:16+0200')]);
 
-        $this->assertEquals(2, count($result));
+        $this->assertCount(2, $result);
     }
 
     public function testFilterByDateTimeLt()
@@ -63,7 +63,7 @@ class DateTimeTest extends BaseTest
         $this->dataSource->addField('timestamp', 'datetime', 'lt');
         $result = $this->filterDataSource(['timestamp' => new \DateTime('2014-06-02T22:02:16+0200')]);
 
-        $this->assertEquals(1, count($result));
+        $this->assertCount(1, $result);
     }
 
     public function testFilterByDateTimeLte()
@@ -71,7 +71,7 @@ class DateTimeTest extends BaseTest
         $this->dataSource->addField('timestamp', 'datetime', 'lte');
         $result = $this->filterDataSource(['timestamp' => new \DateTime('2014-06-02T22:02:16+0200')]);
 
-        $this->assertEquals(2, count($result));
+        $this->assertCount(2, $result);
     }
 
     public function testFilterByDateTimeBetween()
@@ -86,7 +86,7 @@ class DateTimeTest extends BaseTest
             ]
         );
 
-        $this->assertEquals(4, count($result));
+        $this->assertCount(4, $result);
     }
 
     public function testFilterByDateTimeBetweenAcceptAssociativeArray()
@@ -101,7 +101,7 @@ class DateTimeTest extends BaseTest
             ]
         );
 
-        $this->assertEquals(4, count($result));
+        $this->assertCount(4, $result);
     }
 
     public function testFilterByDateTimeBetweenDiscardEmptyParameters()
@@ -116,7 +116,7 @@ class DateTimeTest extends BaseTest
             ]
         );
 
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
     }
 
     public function testFilterByDateTimeBetweenOnlyFromField()
@@ -130,7 +130,7 @@ class DateTimeTest extends BaseTest
             ]
         );
 
-        $this->assertEquals(4, count($result));
+        $this->assertCount(4, $result);
     }
 
     public function testFilterByDateTimeBetweenOnlyToField()
@@ -144,6 +144,6 @@ class DateTimeTest extends BaseTest
             ]
         );
 
-        $this->assertEquals(8, count($result));
+        $this->assertCount(8, $result);
     }
 }

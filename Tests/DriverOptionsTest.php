@@ -15,7 +15,7 @@ use Elastica\Aggregation\Sum;
 use Elastica\Client;
 use Elastica\Document;
 use Elastica\Query;
-use Elastica\Query\Match;
+use Elastica\Query\MatchQuery;
 use Elastica\Query\Term;
 
 class DriverOptionsTest extends BaseTest
@@ -28,12 +28,12 @@ class DriverOptionsTest extends BaseTest
         $this->dataSource->addField('branch', 'number', 'eq', ['field' => 'branch.id']);
 
         $result = $this->filterDataSource(['branch' => 2]);
-        $this->assertEquals(2, count($result));
+        $this->assertCount(2, $result);
     }
 
     public function testUseUserProvidedQueryAndFilter()
     {
-        $matchQuery = new Match();
+        $matchQuery = new MatchQuery();
         $matchQuery->setField('about', 'lorem');
 
         $termFilter = new Term();
@@ -51,7 +51,7 @@ class DriverOptionsTest extends BaseTest
         );
         $result = $this->dataSource->getResult();
 
-        $this->assertEquals(2, count($result));
+        $this->assertCount(2, $result);
     }
 
     public function testUserProvidedMasterQuery()
@@ -62,7 +62,7 @@ class DriverOptionsTest extends BaseTest
         $masterQuery = new Query();
         $masterQuery->addAggregation($sumAggregation);
 
-        $matchQuery = new Match();
+        $matchQuery = new MatchQuery();
         $matchQuery->setField('about', 'lorem');
 
         $termFilter = new Term();
@@ -99,20 +99,19 @@ class DriverOptionsTest extends BaseTest
             $index->delete();
         }
         $index->create();
-        $type = $index->getType('test_type');
 
         $documents = [];
         $fixtures = require('Fixtures/documents.php');
         foreach ($fixtures as $id => $fixture) {
             $documents[] = new Document($id, $fixture);
         }
-        $type->addDocuments($documents);
-        $index->flush();
+        $index->addDocuments($documents);
+        $index->refresh();
 
         $this->dataSource = $this->getDataSourceFactory()->createDataSource(
             'elastica',
             [
-                'searchable' => $client->getIndex('test_index')->getType('test_type'),
+                'searchable' => $index,
                 'master_query' => $masterQuery,
                 'query' => $matchQuery,
                 'filter' => $termFilter,

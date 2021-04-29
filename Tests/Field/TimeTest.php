@@ -15,12 +15,12 @@ use FSi\Component\DataSource\Driver\Elastica\Tests\BaseTest;
 
 class TimeTest extends BaseTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         $mapping = [
             'timestamp' => ['type' => 'date', 'format' => 'basic_time_no_millis'],
         ];
-        $this->dataSource = $this->prepareIndex('time_index', 'time_index', $mapping, function ($fixture) {
+        $this->dataSource = $this->prepareIndex('time_index', $mapping, function ($fixture) {
             $time = new \DateTime($fixture['timestamp']);
             $fixture['timestamp'] = $time->format('HisO');
 
@@ -33,13 +33,13 @@ class TimeTest extends BaseTest
         $this->dataSource->addField('timestamp', 'time', 'eq');
 
         $result = $this->filterDataSource(['timestamp' => '']);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
 
         $result = $this->filterDataSource(['timestamp' => null]);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
 
         $result = $this->filterDataSource(['timestamp' => []]);
-        $this->assertEquals(11, count($result));
+        $this->assertCount(11, $result);
     }
 
     public function testFilterByTimeEq()
@@ -47,7 +47,7 @@ class TimeTest extends BaseTest
         $this->dataSource->addField('timestamp', 'time', 'eq');
         $result = $this->filterDataSource(['timestamp' => new \DateTime('T23:01:16+0200')]);
 
-        $this->assertEquals(1, count($result));
+        $this->assertCount(1, $result);
     }
 
     public function testFilterByTimeGt()
@@ -55,7 +55,7 @@ class TimeTest extends BaseTest
         $this->dataSource->addField('timestamp', 'time', 'gt');
         $result = $this->filterDataSource(['timestamp' => new \DateTime('T22:02:16+0200')]);
 
-        $this->assertEquals(2, count($result));
+        $this->assertCount(2, $result);
     }
 
     public function testFilterByTimeGte()
@@ -63,7 +63,7 @@ class TimeTest extends BaseTest
         $this->dataSource->addField('timestamp', 'time', 'gte');
         $result = $this->filterDataSource(['timestamp' => new \DateTime('T22:02:16+0200')]);
 
-        $this->assertEquals(3, count($result));
+        $this->assertCount(3, $result);
     }
 
     public function testFilterByTimeLt()
@@ -71,7 +71,7 @@ class TimeTest extends BaseTest
         $this->dataSource->addField('timestamp', 'time', 'lt');
         $result = $this->filterDataSource(['timestamp' => new \DateTime('T22:02:16+0200')]);
 
-        $this->assertEquals(8, count($result));
+        $this->assertCount(8, $result);
     }
 
     public function testFilterByTimeLte()
@@ -79,7 +79,7 @@ class TimeTest extends BaseTest
         $this->dataSource->addField('timestamp', 'time', 'lte');
         $result = $this->filterDataSource(['timestamp' => new \DateTime('T22:02:16+0200')]);
 
-        $this->assertEquals(9, count($result));
+        $this->assertCount(9, $result);
     }
 
     public function testFilterByTimeBetween()
@@ -94,6 +94,6 @@ class TimeTest extends BaseTest
             ]
         );
 
-        $this->assertEquals(4, count($result));
+        $this->assertCount(4, $result);
     }
 }
