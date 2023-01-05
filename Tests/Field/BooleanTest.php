@@ -35,7 +35,7 @@ class BooleanTest extends BaseTest
 
     public function testFilterByBoolean()
     {
-        $result = $this->filterDataSource(['active' => true]);
+        $result = $this->filterDataSource(['active' => 1]);
 
         $this->assertCount(3, $result);
     }

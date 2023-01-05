@@ -27,7 +27,7 @@ class Boolean extends AbstractField implements ElasticaFieldInterface
         }
 
         $termFilter = new Term();
-        $termFilter->setTerm($this->getField(), $data);
+        $termFilter->setTerm($this->getField(), (bool) $data);
 
         $filter->addMust($termFilter);
     }
