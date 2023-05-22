@@ -20,9 +20,20 @@ class DateTimeTest extends BaseTest
         $this->dataSource = $this->prepareIndex('datetime_index');
     }
 
-    public function testFilterByEmptyParameter()
+    public function testIsNullComparison(): void
     {
-        $this->dataSource->addField('timestamp', 'datetime', 'eq');
+        $this->dataSource->addField('no_timestamp', 'datetime', ['field' => 'timestamp', 'comparison' => 'isNull']);
+
+        $result = $this->filterDataSource(['no_timestamp' => 'null']);
+        $this->assertCount(1, $result);
+
+        $result = $this->filterDataSource(['no_timestamp' => 'no_null']);
+        $this->assertCount(10, $result);
+    }
+
+    public function testFilterByEmptyParameter(): void
+    {
+        $this->dataSource->addField('timestamp', 'datetime', ['comparison' => 'eq']);
 
         $result = $this->filterDataSource(['timestamp' => '']);
         $this->assertCount(11, $result);
@@ -34,49 +45,49 @@ class DateTimeTest extends BaseTest
         $this->assertCount(11, $result);
     }
 
-    public function testFilterByDateTimeEq()
+    public function testFilterByDateTimeEq(): void
     {
-        $this->dataSource->addField('timestamp', 'datetime', 'eq');
+        $this->dataSource->addField('timestamp', 'datetime', ['comparison' => 'eq']);
         $result = $this->filterDataSource(['timestamp' => new \DateTime('2014-06-02T22:02:16+0200')]);
 
         $this->assertCount(1, $result);
     }
 
-    public function testFilterByDateTimeGt()
+    public function testFilterByDateTimeGt(): void
     {
-        $this->dataSource->addField('timestamp', 'datetime', 'gt');
+        $this->dataSource->addField('timestamp', 'datetime', ['comparison' => 'gt']);
         $result = $this->filterDataSource(['timestamp' => new \DateTime('2014-06-01T23:01:16+0200')]);
 
-        $this->assertCount(10, $result);
+        $this->assertCount(9, $result);
     }
 
-    public function testFilterByDateTimeGte()
+    public function testFilterByDateTimeGte(): void
     {
-        $this->dataSource->addField('timestamp', 'datetime', 'gte');
+        $this->dataSource->addField('timestamp', 'datetime', ['comparison' => 'gte']);
         $result = $this->filterDataSource(['timestamp' => new \DateTime('2014-06-09T15:09:16+0200')]);
 
-        $this->assertCount(2, $result);
+        $this->assertCount(1, $result);
     }
 
-    public function testFilterByDateTimeLt()
+    public function testFilterByDateTimeLt(): void
     {
-        $this->dataSource->addField('timestamp', 'datetime', 'lt');
+        $this->dataSource->addField('timestamp', 'datetime', ['comparison' => 'lt']);
         $result = $this->filterDataSource(['timestamp' => new \DateTime('2014-06-02T22:02:16+0200')]);
 
         $this->assertCount(1, $result);
     }
 
-    public function testFilterByDateTimeLte()
+    public function testFilterByDateTimeLte(): void
     {
-        $this->dataSource->addField('timestamp', 'datetime', 'lte');
+        $this->dataSource->addField('timestamp', 'datetime', ['comparison' => 'lte']);
         $result = $this->filterDataSource(['timestamp' => new \DateTime('2014-06-02T22:02:16+0200')]);
 
         $this->assertCount(2, $result);
     }
 
-    public function testFilterByDateTimeBetween()
+    public function testFilterByDateTimeBetween(): void
     {
-        $this->dataSource->addField('timestamp', 'datetime', 'between');
+        $this->dataSource->addField('timestamp', 'datetime', ['comparison' => 'between']);
         $result = $this->filterDataSource(
             [
                 'timestamp' => [
@@ -86,12 +97,12 @@ class DateTimeTest extends BaseTest
             ]
         );
 
-        $this->assertCount(4, $result);
+        $this->assertCount(3, $result);
     }
 
-    public function testFilterByDateTimeBetweenAcceptAssociativeArray()
+    public function testFilterByDateTimeBetweenAcceptAssociativeArray(): void
     {
-        $this->dataSource->addField('timestamp', 'datetime', 'between');
+        $this->dataSource->addField('timestamp', 'datetime', ['comparison' => 'between']);
         $result = $this->filterDataSource(
             [
                 'timestamp' => [
@@ -101,12 +112,12 @@ class DateTimeTest extends BaseTest
             ]
         );
 
-        $this->assertCount(4, $result);
+        $this->assertCount(3, $result);
     }
 
-    public function testFilterByDateTimeBetweenDiscardEmptyParameters()
+    public function testFilterByDateTimeBetweenDiscardEmptyParameters(): void
     {
-        $this->dataSource->addField('timestamp', 'datetime', 'between');
+        $this->dataSource->addField('timestamp', 'datetime', ['comparison' => 'between']);
         $result = $this->filterDataSource(
             [
                 'timestamp' => [
@@ -119,9 +130,9 @@ class DateTimeTest extends BaseTest
         $this->assertCount(11, $result);
     }
 
-    public function testFilterByDateTimeBetweenOnlyFromField()
+    public function testFilterByDateTimeBetweenOnlyFromField(): void
     {
-        $this->dataSource->addField('timestamp', 'datetime', 'between');
+        $this->dataSource->addField('timestamp', 'datetime', ['comparison' => 'between']);
         $result = $this->filterDataSource(
             [
                 'timestamp' => [
@@ -130,12 +141,12 @@ class DateTimeTest extends BaseTest
             ]
         );
 
-        $this->assertCount(4, $result);
+        $this->assertCount(3, $result);
     }
 
-    public function testFilterByDateTimeBetweenOnlyToField()
+    public function testFilterByDateTimeBetweenOnlyToField(): void
     {
-        $this->dataSource->addField('timestamp', 'datetime', 'between');
+        $this->dataSource->addField('timestamp', 'datetime', ['comparison' => 'between']);
         $result = $this->filterDataSource(
             [
                 'timestamp' => [

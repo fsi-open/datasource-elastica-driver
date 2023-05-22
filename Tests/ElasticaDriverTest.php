@@ -13,19 +13,16 @@ namespace FSi\Component\DataSource\Driver\Elastica\Tests;
 
 use Elastica\SearchableInterface;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaDriver;
-use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
-use FSi\Component\DataSource\Driver\Elastica\Extension\Core\CoreDriverExtension;
-use FSi\Component\DataSource\Field\FieldTypeInterface;
-use PHPUnit\Framework\TestCase;
+use FSi\Component\DataSource\Driver\Elastica\FieldTypeInterface as ElasticaFieldTypeInterfaceAlias;
+use FSi\Component\DataSource\Field\Type\FieldTypeInterface as DataSourceFieldTypeInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ElasticaDriverTest extends TestCase
+class ElasticaDriverTest extends BaseTest
 {
-    public function testDriverHasExtensions()
+    public function testDriverHasExtensions(): void
     {
-        $driver = new ElasticaDriver(
-            [new CoreDriverExtension()],
-            $this->createMock(SearchableInterface::class)
-        );
+        $driver = $this->getElasticaFactory()
+            ->createDriver(['searchable' => $this->createMock(SearchableInterface::class)]);
 
         $this->assertTrue($driver->hasFieldType('text'));
         $this->assertTrue($driver->hasFieldType('number'));
@@ -38,7 +35,7 @@ class ElasticaDriverTest extends TestCase
         $this->assertFalse($driver->hasFieldType('unknown-field'));
     }
 
-    public function fieldNameProvider()
+    public function fieldNameProvider(): array
     {
         return [
             ['text'],
@@ -54,21 +51,20 @@ class ElasticaDriverTest extends TestCase
     /**
      * @dataProvider fieldNameProvider
      */
-    public function testFields(string $fieldName)
+    public function testFields(string $fieldName): void
     {
-        $driver = new ElasticaDriver(
-            [new CoreDriverExtension()],
-            $this->createMock(SearchableInterface::class)
-        );
+        $driver = $this->getElasticaFactory()
+            ->createDriver(['searchable' => $this->createMock(SearchableInterface::class)]);
 
         $this->assertTrue($driver->hasFieldType($fieldName));
 
-        /** @var FieldTypeInterface $field */
         $field = $driver->getFieldType($fieldName);
-        $this->assertTrue($field instanceof FieldTypeInterface);
-        $this->assertTrue($field instanceof ElasticaFieldInterface);
+        $this->assertInstanceOf(ElasticaFieldTypeInterfaceAlias::class, $field);
 
-        $comparisons = $field->getAvailableComparisons();
-        $this->assertGreaterThan(0, count($comparisons));
+        $optionsResolver = new OptionsResolver();
+        $field->initOptions($optionsResolver);
+        $this->assertTrue($optionsResolver->isDefined('name'));
+        $this->assertTrue($optionsResolver->isDefined('field'));
+        $this->assertTrue($optionsResolver->isDefined('comparison'));
     }
 }

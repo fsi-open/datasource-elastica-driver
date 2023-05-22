@@ -13,27 +13,34 @@ namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
 use Elastica\Query\BoolQuery;
 use Elastica\Query\Term;
-use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
+use FSi\Component\DataSource\Field\FieldInterface;
+use FSi\Component\DataSource\Field\Type\BooleanTypeInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Boolean extends AbstractField implements ElasticaFieldInterface
+class Boolean extends AbstractField implements BooleanTypeInterface
 {
-    protected $comparisons = ['eq'];
-
-    public function buildQuery(BoolQuery $query, BoolQuery $filter)
+    public function buildQuery(BoolQuery $query, BoolQuery $filter, FieldInterface $field): void
     {
-        $data = $this->getCleanParameter();
+        $data = $field->getParameter();
         if ($this->isEmpty($data)) {
             return;
         }
 
         $termFilter = new Term();
-        $termFilter->setTerm($this->getField(), (bool) $data);
+        $termFilter->setTerm($field->getOption('field'), (bool) $data);
 
         $filter->addMust($termFilter);
     }
 
-    public function getType()
+    public function getId(): string
     {
         return 'boolean';
+    }
+
+    public function initOptions(OptionsResolver $optionsResolver): void
+    {
+        parent::initOptions($optionsResolver);
+
+        $optionsResolver->setAllowedValues('comparison', ['eq']);
     }
 }

@@ -11,30 +11,27 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
+use DateTimeInterface;
 use Elastica\Query\BoolQuery;
+use Elastica\Query\Exists;
 use Elastica\Query\Range;
-use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
 use FSi\Component\DataSource\Driver\Elastica\Exception\ElasticaDriverException;
+use FSi\Component\DataSource\Field\FieldInterface;
+use FSi\Component\DataSource\Field\Type\DateTimeTypeInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DateTime extends AbstractField implements ElasticaFieldInterface
+class DateTime extends AbstractField implements DateTimeTypeInterface
 {
-    protected $comparisons = ['eq', 'lt', 'lte', 'gt', 'gte', 'between'];
-
-    protected function getFormat()
+    public function buildQuery(BoolQuery $query, BoolQuery $filter, FieldInterface $field): void
     {
-        return \DateTime::ISO8601;
-    }
-
-    public function buildQuery(BoolQuery $query, BoolQuery $filter)
-    {
-        $data = $this->getCleanParameter();
+        $data = $field->getParameter();
         if ($this->isEmpty($data)) {
             return;
         }
 
-        $fieldPath = $this->getField();
+        $fieldPath = $field->getOption('field');
 
-        if ($this->getComparison() == 'eq') {
+        if ($field->getOption('comparison') === 'eq') {
             $formattedDate = $data->format($this->getFormat());
             $filter->addMust(
                 new Range(
@@ -42,14 +39,14 @@ class DateTime extends AbstractField implements ElasticaFieldInterface
                     ['gte' => $formattedDate, 'lte' => $formattedDate]
                 )
             );
-        } elseif (in_array($this->getComparison(), ['lt', 'lte', 'gt', 'gte'])) {
+        } elseif (in_array($field->getOption('comparison'), ['lt', 'lte', 'gt', 'gte'])) {
             $filter->addMust(
                 new Range(
                     $fieldPath,
-                    [$this->getComparison() => $data->format($this->getFormat())]
+                    [$field->getOption('comparison') => $data->format($this->getFormat())]
                 )
             );
-        } elseif ($this->getComparison() == 'between') {
+        } elseif ($field->getOption('comparison') === 'between') {
             if (!is_array($data)) {
                 throw new \InvalidArgumentException();
             }
@@ -71,14 +68,32 @@ class DateTime extends AbstractField implements ElasticaFieldInterface
                     )
                 );
             }
-
+        } elseif ($field->getOption('comparison') === 'isNull') {
+            $existsQuery = new Exists($fieldPath);
+            if ('null' === $data) {
+                $filter->addMustNot($existsQuery);
+            } elseif ($data === 'no_null') {
+                $filter->addMust($existsQuery);
+            }
         } else {
-            throw new ElasticaDriverException(sprintf('Unexpected comparison type ("%s").', $this->getComparison()));
+            throw new ElasticaDriverException("Unexpected comparison type \"{$field->getOption('comparison')}\".");
         }
     }
 
-    public function getType()
+    public function getId(): string
     {
         return 'datetime';
+    }
+
+    public function initOptions(OptionsResolver $optionsResolver): void
+    {
+        parent::initOptions($optionsResolver);
+
+        $optionsResolver->setAllowedValues('comparison', ['eq', 'lt', 'lte', 'gt', 'gte', 'between', 'isNull']);
+    }
+
+    protected function getFormat(): string
+    {
+        return DateTimeInterface::ATOM;
     }
 }

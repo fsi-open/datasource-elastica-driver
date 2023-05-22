@@ -11,25 +11,30 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
+use Elastica\Query\Exists;
 use FSi\Component\DataSource\Driver\Elastica\Exception\ElasticaDriverException;
-use FSi\Component\DataSource\Field\FieldAbstractType;
 use Elastica\Query\BoolQuery;
 use Elastica\Query\Range;
 use Elastica\Query\Term;
 use Elastica\Query\Terms;
+use FSi\Component\DataSource\Driver\Elastica\FieldTypeInterface;
+use FSi\Component\DataSource\Field\FieldInterface;
+use FSi\Component\DataSource\Field\Type\AbstractFieldType;
+use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class AbstractField extends FieldAbstractType
+abstract class AbstractField extends AbstractFieldType implements FieldTypeInterface
 {
-    public function buildQuery(BoolQuery $query, BoolQuery $filter)
+    public function buildQuery(BoolQuery $query, BoolQuery $filter, FieldInterface $field): void
     {
-        $data = $this->getCleanParameter();
+        $data = $field->getParameter();
         if ($this->isEmpty($data)) {
             return;
         }
 
-        $fieldPath = $this->getField();
+        $fieldPath = $field->getOption('field');
 
-        switch ($this->getComparison()) {
+        switch ($field->getOption('comparison')) {
             case 'eq':
                 $termFilter = new Term();
                 $termFilter->setTerm($fieldPath, $data);
@@ -44,7 +49,7 @@ abstract class AbstractField extends FieldAbstractType
                 break;
             case 'between':
                 if (!is_array($data)) {
-                    throw new ElasticaDriverException;
+                    throw new ElasticaDriverException("Between comparison needs an array");
                 }
                 $from = array_shift($data);
                 $to = array_shift($data);
@@ -54,7 +59,7 @@ abstract class AbstractField extends FieldAbstractType
             case 'lte':
             case 'gt':
             case 'gte':
-                $filter->addMust(new Range($fieldPath, [$this->getComparison() => $data]));
+                $filter->addMust(new Range($fieldPath, [$field->getOption('comparison') => $data]));
                 break;
             case 'in':
                 $filter->addMust(
@@ -62,46 +67,40 @@ abstract class AbstractField extends FieldAbstractType
                 );
                 break;
             case 'notIn':
-                $data = $this->getCleanParameter();
                 if (!is_array($data)) {
                     throw new ElasticaDriverException();
                 }
                 $filter->addMustNot(new Terms($fieldPath, $data));
                 break;
+            case 'isNull':
+                $existsQuery = new Exists($fieldPath);
+                if ('null' === $data) {
+                    $filter->addMustNot($existsQuery);
+                } elseif ($data === 'no_null') {
+                    $filter->addMust($existsQuery);
+                }
+                break;
             default:
                 throw new ElasticaDriverException(
-                    sprintf('Unexpected comparison type ("%s").', $this->getComparison())
+                    sprintf('Unexpected comparison type ("%s").', $field->getOption('comparison'))
                 );
         }
     }
 
-    public function initOptions()
+    public function initOptions(OptionsResolver $optionsResolver): void
     {
-        $field = $this;
-        $this->getOptionsResolver()
+        parent::initOptions($optionsResolver);
+
+        $optionsResolver
             ->setDefault('field', null)
             ->setAllowedTypes('field', ['string', 'null'])
-            ->setNormalizer('field', function ($options, $value) use ($field) {
-                if (!empty($value)) {
-                    return $value;
-                }
-
-                return $field->getName();
+            ->setNormalizer('field', function (Options $options, $value) {
+                return $value ?? $options['name'];
             })
+            ->setAllowedValues(
+                'comparison',
+                ['eq', 'neq', 'between', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'isNull']
+            )
         ;
-    }
-
-    protected function getField()
-    {
-        return $this->getOption('field');
-    }
-
-    protected function isEmpty($data): bool
-    {
-        if (is_array($data)) {
-            $data = array_filter($data);
-        }
-
-        return ($data === [] || $data === '' || $data === null);
     }
 }

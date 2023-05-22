@@ -14,56 +14,41 @@ namespace FSi\Component\DataSource\Driver\Elastica;
 use Elastica\Query;
 use Elastica\Query\AbstractQuery;
 use Elastica\Query\BoolQuery;
-use Elastica\ResultSet;
 use Elastica\SearchableInterface;
-use FSi\Component\DataSource\Driver\DriverAbstract;
+use FSi\Component\DataSource\Driver\AbstractDriver;
+use FSi\Component\DataSource\Driver\Elastica\Event\PostGetResult;
+use FSi\Component\DataSource\Driver\Elastica\Event\PreGetResult;
+use FSi\Component\DataSource\Result;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use RuntimeException;
 
-class ElasticaDriver extends DriverAbstract
+use function get_class;
+use function sprintf;
+
+class ElasticaDriver extends AbstractDriver
 {
-    /**
-     * @var BoolQuery
-     */
-    private $filters;
+    private SearchableInterface $searchable;
+    private ?AbstractQuery $userSubQuery;
+    private ?AbstractQuery $userFilter;
+    private ?Query $masterQuery;
 
     /**
-     * @var BoolQuery
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param array<FieldTypeInterface> $fieldTypes
+     * @param SearchableInterface $searchable
+     * @param AbstractQuery|null $userSubQuery
+     * @param AbstractQuery|null $userFilter
+     * @param Query|null $masterQuery
      */
-    private $subQueries;
-
-    /**
-     * @var Query
-     */
-    private $query;
-
-    /**
-     * @var SearchableInterface
-     */
-    private $searchable;
-
-    /**
-     * @var AbstractQuery
-     */
-    private $userSubQuery;
-
-    /**
-     * @var AbstractQuery
-     */
-    private $userFilter;
-
-    /**
-     * @var Query
-     */
-    private $masterQuery;
-
     public function __construct(
-        array $extensions,
+        EventDispatcherInterface $eventDispatcher,
+        array $fieldTypes,
         SearchableInterface $searchable,
         AbstractQuery $userSubQuery = null,
         AbstractQuery $userFilter = null,
         Query $masterQuery = null
     ) {
-        parent::__construct($extensions);
+        parent::__construct($eventDispatcher, $fieldTypes);
 
         $this->searchable = $searchable;
         $this->userSubQuery = $userSubQuery;
@@ -71,65 +56,55 @@ class ElasticaDriver extends DriverAbstract
         $this->masterQuery = $masterQuery;
     }
 
-    public function initResult()
+    public function getResult(array $fields, ?int $first, ?int $max): Result
     {
-        $this->subQueries = new BoolQuery();
-        $this->filters = new BoolQuery();
-        $this->query = ($this->masterQuery === null) ? new Query() : $this->masterQuery;
-    }
+        $subQueries = new BoolQuery();
+        $filters = new BoolQuery();
+        $query = $this->masterQuery ?? new Query();
 
-    public function buildResult($fields, $from, $limit): ResultSet
-    {
+        $this->getEventDispatcher()->dispatch(new PreGetResult($this, $fields, $query));
+
         if ($this->userFilter !== null) {
-            $this->filters->addMust($this->userFilter);
+            $filters->addMust($this->userFilter);
         }
 
         foreach ($fields as $field) {
-            if (!$field instanceof ElasticaFieldInterface) {
+            $fieldType = $field->getType();
+            if (false === $fieldType instanceof FieldTypeInterface) {
                 throw new RuntimeException(sprintf(
-                    'All fields must be instances of "%s"',
-                    ElasticaFieldInterface::class
+                    'All fields must be instances of "%s", but got "%s"',
+                    FieldTypeInterface::class,
+                    get_class($fieldType)
                 ));
             }
 
-            $field->buildQuery($this->subQueries, $this->filters);
+            $fieldType->buildQuery($subQueries, $filters, $field);
         }
 
         if ($this->userSubQuery !== null) {
-            $this->subQueries->addMust($this->userSubQuery);
+            $subQueries->addMust($this->userSubQuery);
         }
 
-        if ($this->subQueries->hasParam('should') || $this->subQueries->hasParam('must') ||
-            $this->subQueries->hasParam('must_not')) {
-            $this->query->setQuery($this->subQueries);
+        if ($subQueries->hasParam('should') || $subQueries->hasParam('must') || $subQueries->hasParam('must_not')) {
+            $query->setQuery($subQueries);
         }
 
-        $tempFilters = $this->filters->getParams();
+        $tempFilters = $filters->getParams();
         if (!empty($tempFilters)) {
-            $this->query->setPostFilter($this->filters);
+            $query->setPostFilter($filters);
         }
 
-        if ($from > 0) {
-            $this->query->setFrom($from);
+        if (null !== $first) {
+            $query->setFrom($first);
         }
-        if ($limit > 0) {
-            $this->query->setSize($limit);
-        }
-
-        return $this->searchable->search(Query::create($this->query));
-    }
-
-    public function getType()
-    {
-        return 'elastica';
-    }
-
-    public function getQuery(): Query
-    {
-        if (!$this->query) {
-            throw new RuntimeException('Query is accessible only during preGetResult event.');
+        if (null !== $max) {
+            $query->setSize($max);
         }
 
-        return $this->query;
+        $result = new ElasticaResult($this->searchable->search(Query::create($query)));
+        $event = new PostGetResult($this, $fields, $result);
+        $this->getEventDispatcher()->dispatch($event);
+
+        return $event->getResult();
     }
 }

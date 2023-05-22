@@ -18,10 +18,10 @@ class TextTest extends BaseTest
     public function setUp(): void
     {
         $this->dataSource = $this->prepareIndex('text_index');
-        $this->dataSource->addField('about', 'text', 'match');
+        $this->dataSource->addField('about', 'text', ['comparison' => 'match']);
     }
 
-    public function testFilterByEmptyParameter()
+    public function testFilterByEmptyParameter(): void
     {
         $result = $this->filterDataSource(['about' => '']);
         $this->assertCount(11, $result);
@@ -33,34 +33,34 @@ class TextTest extends BaseTest
         $this->assertCount(11, $result);
     }
 
-    public function testFindItemsBySingleWord()
+    public function testFindItemsBySingleWord(): void
     {
         $result = $this->filterDataSource(['about' => 'lorem']);
 
         $this->assertCount(11, $result);
     }
 
-    public function testFindItemsByMultipleWord()
+    public function testFindItemsByMultipleWord(): void
     {
         $result = $this->filterDataSource(['about' => 'lorem dolor']);
 
         $this->assertCount(11, $result);
     }
 
-    public function testFindByMultipleFields()
+    public function testFindByMultipleFields(): void
     {
         $this->dataSource->clearFields();
-        $this->dataSource->addField('multi', 'text', 'match', ['field' => ['about', 'name']]);
+        $this->dataSource->addField('multi', 'text', ['comparison' => 'match', 'field' => ['about', 'name']]);
 
         $result = $this->filterDataSource(['multi' => 'MarkA Janusz']);
 
         $this->assertCount(3, $result);
     }
 
-    public function testFindItemsByMultipleWordWithAndOperator()
+    public function testFindItemsByMultipleWordWithAndOperator(): void
     {
         $this->dataSource->clearFields();
-        $this->dataSource->addField('about', 'text', 'match', ['operator' => 'and']);
+        $this->dataSource->addField('about', 'text', ['comparison' => 'match', 'operator' => 'and']);
         $result = $this->filterDataSource(['about' => 'MarkA MarkC']);
 
         $this->assertCount(1, $result);

@@ -1,0 +1,35 @@
+#includes:
+#    - vendor/phpstan/phpstan-beberlei-assert/extension.neon
+#    - vendor/phpstan/phpstan-doctrine/extension.neon
+#    - vendor/phpstan/phpstan-symfony/extension.neon
+#    - vendor/phpstan/phpstan-phpunit/extension.neon
+
+parameters:
+    level: 8
+    paths:
+        - src
+        - Tests
+    inferPrivatePropertyTypeFromConstructor: true
+    checkGenericClassInNonGenericObjectType: false
+    checkMissingIterableValueType: false
+    parallel:
+        processTimeout: 120.0
+        maximumNumberOfProcesses: 8
+#    ignoreErrors:
+#        -
+#            message: '#Parameter \#1 \$value of static method CommerceGuys\\Enum\\AbstractEnum::assertExists\(\) expects string, int given#'
+#            path: %currentWorkingDirectory%/src/PKOBundle/Entity/OrderPko.php
+#        -
+#            message: '#Parameter \#1 \$value of static method CommerceGuys\\Enum\\AbstractEnum::assertExists\(\) expects string, int given#'
+#            path: %currentWorkingDirectory%/src/PKOBundle/Import/OrderOperation.php
+#        -
+#            message: '#Call to an undefined method Faker\\Generator::.*\(\)#'
+#            path: %currentWorkingDirectory%/src/AppBundle/DataFixtures/Factory
+#        -
+#            message: '#Method Symfony\\Component\\Validator\\Validator\\ValidatorInterface::startContext\(\) invoked with 1 parameter, 0 required#'
+#            path: %currentWorkingDirectory%/src/AppBundle/Form/TypeExtension/ValidationExtension.php
+#        -
+#            message: '#Method AppBundle\\Behat\\MinkContext::getPage\(\) should return T of SensioLabs\\Behat\\PageObjectExtension\\PageObject\\Page but returns SensioLabs\\Behat\\PageObjectExtension\\PageObject\\Page\.#'
+#            path: %currentWorkingDirectory%/src/AppBundle/Behat/MinkContext.php
+#        - '#Parameter \#1 \$value of static method CommerceGuys\\Enum\\AbstractEnum::assertExists\(\) expects string, \w* given\.#'
+#        - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters\, 1 required\.#'

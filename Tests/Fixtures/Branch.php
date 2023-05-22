@@ -13,22 +13,21 @@ namespace FSi\Component\DataSource\Driver\Elastica\Tests\Fixtures;
 
 class Branch
 {
-    private $id;
+    private ?int $id;
+    private ?int $idx;
 
-    private $idx;
-
-    public function __construct($id, $idx = null)
+    public function __construct(?int $id, ?int $idx = null)
     {
         $this->id = $id;
         $this->idx = $idx;
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getIdx()
+    public function getIdx(): ?int
     {
         return $this->idx;
     }

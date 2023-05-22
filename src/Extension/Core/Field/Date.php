@@ -11,17 +11,17 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
-class Date extends DateTime
+use FSi\Component\DataSource\Field\Type\DateTypeInterface;
+
+class Date extends DateTime implements DateTypeInterface
 {
-    protected $comparisons = ['eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'between'];
-
-    protected function getFormat()
-    {
-        return 'Y-m-d';
-    }
-
-    public function getType()
+    public function getId(): string
     {
         return 'date';
+    }
+
+    protected function getFormat(): string
+    {
+        return 'Y-m-d';
     }
 }

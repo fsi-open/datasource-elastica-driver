@@ -15,50 +15,46 @@ use Closure;
 use Elastica\Client;
 use Elastica\Document;
 use Elastica\Mapping;
-use FSi\Component\DataSource\DataSource;
 use FSi\Component\DataSource\DataSourceFactory as BaseDataSourceFactory;
 use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\Driver\DriverFactoryManager;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaDriverFactory;
-use FSi\Component\DataSource\Driver\Elastica\Extension\Core\CoreDriverExtension;
-use FSi\Component\DataSource\Driver\Elastica\Extension\Indexing\IndexingDriverExtension;
+use FSi\Component\DataSource\Driver\Elastica\Event\PreGetResult;
+use FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field\Boolean;
+use FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field\Date;
+use FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field\DateTime;
+use FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field\Entity;
+use FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field\Number;
+use FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field\Text;
+use FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field\Time;
 use FSi\Component\DataSource\Driver\Elastica\Extension\Ordering\OrderingDriverExtension;
-use FSi\Component\DataSource\Extension\Core;
-use FSi\Component\DataSource\Extension\Core\Ordering\OrderingExtension;
+use FSi\Component\DataSource\Event\PostGetParameters;
+use FSi\Component\DataSource\Event\PreBindParameters;
+use FSi\Component\DataSource\Extension;
+use FSi\Component\DataSource\Extension\Ordering\Field\FieldExtension;
+use FSi\Component\DataSource\Extension\Ordering\Storage;
+use FSi\Component\DataSource\Result;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 abstract class BaseTest extends TestCase
 {
-    /**
-     * @var DataSource
-     */
-    protected $dataSource;
+    private ?EventDispatcherInterface $eventDispatcher = null;
+    private ?Storage $orderingStorage = null;
+    protected DataSourceInterface $dataSource;
 
     protected function getDataSourceFactory(): BaseDataSourceFactory
     {
-        $driverExtensions = [
-            new CoreDriverExtension(),
-            new OrderingDriverExtension(),
-            new IndexingDriverExtension(),
-        ];
+        $elasticaFactory = $this->getElasticaFactory();
+        $driverFactoryManager = new DriverFactoryManager([$elasticaFactory]);
 
-        $driverFactoryManager = new DriverFactoryManager([
-            new ElasticaDriverFactory($driverExtensions)
-        ]);
-
-        $dataSourceExtensions = [
-            new Core\Pagination\PaginationExtension(),
-            new OrderingExtension()
-        ];
-
-        return new BaseDataSourceFactory($driverFactoryManager, $dataSourceExtensions);
+        return new BaseDataSourceFactory($this->getEventDispatcher(), $driverFactoryManager);
     }
 
-    protected function filterDataSource(array $parameters)
+    protected function filterDataSource(array $parameters): Result
     {
-        $this->dataSource->bindParameters(
-            $this->parametersEnvelope($parameters)
-        );
+        $this->dataSource->bindParameters($this->parametersEnvelope($parameters));
 
         return $this->dataSource->getResult();
     }
@@ -101,6 +97,54 @@ abstract class BaseTest extends TestCase
         return $this->getDataSourceFactory()->createDataSource(
             'elastica',
             ['searchable' => $index]
+        )->setMaxResults(100);
+    }
+
+    protected function getEventDispatcher(): EventDispatcherInterface
+    {
+        if (null === $this->eventDispatcher) {
+            $this->eventDispatcher = new EventDispatcher();
+            $this->eventDispatcher->addListener(
+                PreGetResult::class,
+                new OrderingDriverExtension($this->getOrderingStorage())
+            );
+            $this->eventDispatcher->addListener(
+                PreBindParameters::class,
+                new Extension\Ordering\EventSubscriber\OrderingPreBindParameters($this->getOrderingStorage())
+            );
+            $this->eventDispatcher->addListener(
+                PostGetParameters::class,
+                new Extension\Ordering\EventSubscriber\OrderingPostGetParameters($this->getOrderingStorage())
+            );
+        }
+
+        return $this->eventDispatcher;
+    }
+
+    private function getOrderingStorage(): Storage
+    {
+        if (null === $this->orderingStorage) {
+            $this->orderingStorage = new Storage();
+        }
+
+        return $this->orderingStorage;
+    }
+
+    protected function getElasticaFactory(): ElasticaDriverFactory
+    {
+        $fieldExtensions = [new FieldExtension($this->getOrderingStorage())];
+
+        return new ElasticaDriverFactory(
+            $this->getEventDispatcher(),
+            [
+                new Boolean($fieldExtensions),
+                new Date($fieldExtensions),
+                new DateTime($fieldExtensions),
+                new Entity([]),
+                new Number($fieldExtensions),
+                new Text($fieldExtensions),
+                new Time($fieldExtensions),
+            ]
         );
     }
 }

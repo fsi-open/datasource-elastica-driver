@@ -12,8 +12,10 @@ declare(strict_types=1);
 namespace FSi\Component\DataSource\Driver\Elastica;
 
 use Elastica\Query\BoolQuery;
+use FSi\Component\DataSource\Field\FieldInterface;
+use FSi\Component\DataSource\Field\Type\FieldTypeInterface as CoreFieldTypeInterface;
 
-interface ElasticaFieldInterface
+interface FieldTypeInterface extends CoreFieldTypeInterface
 {
-    public function buildQuery(BoolQuery $query, BoolQuery $filter);
+    public function buildQuery(BoolQuery $query, BoolQuery $filter, FieldInterface $field): void;
 }

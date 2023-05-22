@@ -3,3 +3,4 @@ vendor
 bin
 composer.lock
 .phpunit.result.cache
+.phpcs-cache

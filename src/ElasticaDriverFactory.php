@@ -15,39 +15,44 @@ use Elastica\Query;
 use Elastica\Query\AbstractQuery;
 use Elastica\SearchableInterface;
 use FSi\Component\DataSource\Driver\DriverFactoryInterface;
+use FSi\Component\DataSource\Driver\DriverInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ElasticaDriverFactory implements DriverFactoryInterface
 {
+    private EventDispatcherInterface $eventDispatcher;
     /**
-     * @var OptionsResolver
+     * @var array<FieldTypeInterface>
      */
-    private $optionsResolver;
+    private array $fieldTypes;
+    private OptionsResolver $optionsResolver;
 
-    /**
-     * @var array
-     */
-    private $extensions;
-
-    public function __construct(array $extensions)
+    public static function getDriverType(): string
     {
-        $this->extensions = $extensions;
+        return 'elastica';
+    }
+
+    /**
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param array<FieldTypeInterface> $fieldTypes
+     */
+    public function __construct(EventDispatcherInterface $eventDispatcher, array $fieldTypes)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+        $this->fieldTypes = $fieldTypes;
         $this->optionsResolver = new OptionsResolver();
 
         $this->initOptions();
     }
 
-    public function getDriverType()
-    {
-        return 'elastica';
-    }
-
-    public function createDriver($options = [])
+    public function createDriver($options = []): DriverInterface
     {
         $options = $this->optionsResolver->resolve($options);
 
         return new ElasticaDriver(
-            $this->extensions,
+            $this->eventDispatcher,
+            $this->fieldTypes,
             $options['searchable'],
             $options['query'],
             $options['filter'],

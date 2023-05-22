@@ -12,42 +12,56 @@ declare(strict_types=1);
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
 use Elastica\Query\BoolQuery;
+use Elastica\Query\Exists;
 use Elastica\Query\Terms;
-use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
+use FSi\Component\DataSource\Field\FieldInterface;
+use FSi\Component\DataSource\Field\Type\EntityTypeInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
-class Entity extends AbstractField implements ElasticaFieldInterface
+class Entity extends AbstractField implements EntityTypeInterface
 {
-    protected $comparisons = ['eq'];
-
-    public function buildQuery(BoolQuery $query, BoolQuery $filter)
+    public function buildQuery(BoolQuery $query, BoolQuery $filter, FieldInterface $field): void
     {
-        $data = $this->getCleanParameter();
-        if (empty($data)) {
+        $data = $field->getParameter();
+        if ($this->isEmpty($data)) {
             return;
         }
 
-        $accessor = PropertyAccess::createPropertyAccessor();
-        $idFieldName = $this->getOption('identifier_field');
+        $fieldPath = $field->getOption('field');
+        $comparison = $field->getOption('comparison');
+        if ('eq' === $comparison) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $idFieldName = $field->getOption('identifier_field');
 
-        $filter->addMust(
-            new Terms(
-                sprintf("%s.%s", $this->getField(), $idFieldName),
-                [$accessor->getValue($data, $idFieldName)]
-            )
-        );
+            $filter->addMust(
+                new Terms(
+                    sprintf("%s.%s", $fieldPath, $idFieldName),
+                    [$accessor->getValue($data, $idFieldName)]
+                )
+            );
+        } elseif ('isNull' === $comparison) {
+            $existsQuery = new Exists($fieldPath);
+            if ('null' === $data) {
+                $filter->addMustNot($existsQuery);
+            } elseif ($data === 'no_null') {
+                $filter->addMust($existsQuery);
+            }
+
+        }
     }
 
-    public function getType()
+    public function getId(): string
     {
         return 'entity';
     }
 
-    public function initOptions()
+    public function initOptions(OptionsResolver $optionsResolver): void
     {
-        parent::initOptions();
+        parent::initOptions($optionsResolver);
 
-        $this->getOptionsResolver()
+        $optionsResolver
+            ->setAllowedValues('comparison', ['eq', 'isNull'])
             ->setDefaults(['identifier_field' => 'id'])
             ->setAllowedTypes('identifier_field', ['string'])
         ;

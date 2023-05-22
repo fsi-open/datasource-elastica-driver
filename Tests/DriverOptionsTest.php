@@ -17,21 +17,22 @@ use Elastica\Document;
 use Elastica\Query;
 use Elastica\Query\MatchQuery;
 use Elastica\Query\Term;
+use FSi\Component\DataSource\Driver\Elastica\ElasticaResult;
 
 class DriverOptionsTest extends BaseTest
 {
-    public function testFieldOptionInField()
+    public function testFieldOptionInField(): void
     {
         $this->prepareDataSource();
 
         $this->dataSource->clearFields();
-        $this->dataSource->addField('branch', 'number', 'eq', ['field' => 'branch.id']);
+        $this->dataSource->addField('branch', 'number', ['field' => 'branch.id', 'comparison' => 'eq']);
 
         $result = $this->filterDataSource(['branch' => 2]);
         $this->assertCount(2, $result);
     }
 
-    public function testUseUserProvidedQueryAndFilter()
+    public function testUseUserProvidedQueryAndFilter(): void
     {
         $matchQuery = new MatchQuery();
         $matchQuery->setField('about', 'lorem');
@@ -54,7 +55,7 @@ class DriverOptionsTest extends BaseTest
         $this->assertCount(2, $result);
     }
 
-    public function testUserProvidedMasterQuery()
+    public function testUserProvidedMasterQuery(): void
     {
         $sumAggregation = new Sum('salary_agg');
         $sumAggregation->setField('salary');
@@ -79,6 +80,7 @@ class DriverOptionsTest extends BaseTest
             )
         );
         $result = $this->dataSource->getResult();
+        $this->assertInstanceOf(ElasticaResult::class, $result);
 
         $this->assertTrue($result->hasAggregations());
 
@@ -90,8 +92,11 @@ class DriverOptionsTest extends BaseTest
         $this->assertEquals($expectedAgg, $result->getAggregations());
     }
 
-    private function prepareDataSource($matchQuery = null, $termFilter = null, $masterQuery = null)
-    {
+    private function prepareDataSource(
+        ?Query\AbstractQuery $matchQuery = null,
+        ?Query\AbstractQuery $termFilter = null,
+        ?Query $masterQuery = null
+    ): void {
         $client  = new Client();
 
         $index = $client->getIndex('test_index');
@@ -112,16 +117,17 @@ class DriverOptionsTest extends BaseTest
             'elastica',
             [
                 'searchable' => $index,
-                'master_query' => $masterQuery,
                 'query' => $matchQuery,
                 'filter' => $termFilter,
+                'master_query' => $masterQuery,
             ]
         );
 
         $this->dataSource
-            ->addField('name', 'text', 'match')
-            ->addField('active', 'boolean', 'eq')
-            ->addField('salary', 'number', 'gte')
-            ->addField('about', 'text', 'match');
+            ->addField('name', 'text', ['comparison' => 'match'])
+            ->addField('active', 'boolean', ['comparison' => 'eq'])
+            ->addField('salary', 'number', ['comparison' => 'gte'])
+            ->addField('about', 'text', ['comparison' => 'match'])
+        ;
     }
 }

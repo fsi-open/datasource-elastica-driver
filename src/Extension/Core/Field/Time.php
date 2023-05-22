@@ -11,17 +11,17 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
-class Time extends DateTime
+use FSi\Component\DataSource\Field\Type\TimeTypeInterface;
+
+class Time extends DateTime implements TimeTypeInterface
 {
-    protected $comparisons = ['eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'between'];
-
-    protected function getFormat()
-    {
-        return 'HisO';
-    }
-
-    public function getType()
+    public function getId(): string
     {
         return 'time';
+    }
+
+    protected function getFormat(): string
+    {
+        return 'HisO';
     }
 }

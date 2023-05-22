@@ -12,17 +12,18 @@ declare(strict_types=1);
 namespace FSi\Component\DataSource\Driver\Elastica;
 
 use ArrayIterator;
-use Iterator;
 use Countable;
+use FSi\Component\DataSource\Result;
+use Iterator;
 use Elastica\ResultSet;
-use IteratorAggregate;
 
-class ElasticaResult implements IteratorAggregate, Countable
+/**
+ * @template T
+ * @implements Result<T>
+ */
+class ElasticaResult implements Countable, Result
 {
-    /**
-     * @var ResultSet
-     */
-    private $resultSet;
+    private ResultSet $resultSet;
 
     public function __construct(ResultSet $resultSet)
     {
@@ -49,7 +50,7 @@ class ElasticaResult implements IteratorAggregate, Countable
         return $this->resultSet->getAggregations();
     }
 
-    public function getAggregation($name): array
+    public function getAggregation(string $name): array
     {
         return $this->resultSet->getAggregation($name);
     }

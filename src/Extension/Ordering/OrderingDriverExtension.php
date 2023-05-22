@@ -11,51 +11,42 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Ordering;
 
-use FSi\Component\DataSource\Extension\Core\Ordering\Driver\DriverExtension;
-use FSi\Component\DataSource\Extension\Core\Ordering\Field\FieldExtension;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use FSi\Component\DataSource\Event\DriverEvents;
-use FSi\Component\DataSource\Event\DriverEvent;
+use FSi\Component\DataSource\DataSourceEventSubscriberInterface;
+use FSi\Component\DataSource\Driver\Elastica\ElasticaDriver;
+use FSi\Component\DataSource\Driver\Elastica\Event\PreGetResult;
+use FSi\Component\DataSource\Extension\Ordering\Storage;
 
 /**
  * Driver extension for ordering that loads fields extension.
  */
-class OrderingDriverExtension extends DriverExtension implements EventSubscriberInterface
+class OrderingDriverExtension implements DataSourceEventSubscriberInterface
 {
-    public function getExtendedDriverTypes()
+    private Storage $storage;
+
+    public static function getPriority(): int
     {
-        return ['elastica'];
+        return 0;
     }
 
-    protected function loadFieldTypesExtensions()
+    public function __construct(Storage $storage)
     {
-        return [
-            new FieldExtension(),
-        ];
+        $this->storage = $storage;
     }
 
-    public static function getSubscribedEvents()
+    public function __invoke(PreGetResult $event): void
     {
-        return [
-            DriverEvents::PRE_GET_RESULT => ['preGetResult'],
-        ];
-    }
+        $driver = $event->getDriver();
+        if (false === $driver instanceof ElasticaDriver) {
+            return;
+        }
 
-    public function preGetResult(DriverEvent\DriverEventArgs $event)
-    {
         $fields = $event->getFields();
-        $sortedFields = $this->sortFields($fields);
+        $sortedFields = $this->storage->sortFields($fields);
 
-        /** @var \Elastica\Query $query */
-        $query = $event->getDriver()->getQuery();
-
+        $query = $event->getQuery();
         foreach ($sortedFields as $fieldName => $direction) {
-            if (!isset($fields[$fieldName])) {
-                continue;
-            }
-
             $field = $fields[$fieldName];
-            $query->addSort([$field->getOption('field') => ['order' => $direction]]);
+            $query->addSort([(string) $field->getOption('field') => ['order' => $direction]]);
         }
     }
 }

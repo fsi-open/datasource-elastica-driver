@@ -18,10 +18,10 @@ class BooleanTest extends BaseTest
     public function setUp(): void
     {
         $this->dataSource = $this->prepareIndex('text_index');
-        $this->dataSource->addField('active', 'boolean', 'eq');
+        $this->dataSource->addField('active', 'boolean', ['comparison' => 'eq']);
     }
 
-    public function testFilterByEmptyParameter()
+    public function testFilterByEmptyParameter(): void
     {
         $result = $this->filterDataSource(['about' => '']);
         $this->assertCount(11, $result);
@@ -33,7 +33,7 @@ class BooleanTest extends BaseTest
         $this->assertCount(11, $result);
     }
 
-    public function testFilterByBoolean()
+    public function testFilterByBoolean(): void
     {
         $result = $this->filterDataSource(['active' => 1]);
 

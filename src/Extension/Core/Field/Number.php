@@ -11,13 +11,11 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
-use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
+use FSi\Component\DataSource\Field\Type\NumberTypeInterface;
 
-class Number extends AbstractField implements ElasticaFieldInterface
+class Number extends AbstractField implements NumberTypeInterface
 {
-    protected $comparisons = ['eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'between'];
-
-    public function getType()
+    public function getId(): string
     {
         return 'number';
     }

@@ -13,45 +13,46 @@ namespace FSi\Component\DataSource\Driver\Elastica\Extension\Core\Field;
 
 use Elastica\Query;
 use Elastica\Query\BoolQuery;
-use FSi\Component\DataSource\Driver\Elastica\ElasticaFieldInterface;
+use FSi\Component\DataSource\Field\FieldInterface;
+use FSi\Component\DataSource\Field\Type\TextTypeInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Text extends AbstractField implements ElasticaFieldInterface
+class Text extends AbstractField implements TextTypeInterface
 {
-    protected $comparisons = ['match'];
-
-    public function buildQuery(BoolQuery $query, BoolQuery $filter)
+    public function buildQuery(BoolQuery $query, BoolQuery $filter, FieldInterface $field): void
     {
-        $data = $this->getCleanParameter();
+        $data = $field->getParameter();
         if ($this->isEmpty($data)) {
             return;
         }
 
-        $field = $this->getField();
-        if (is_array($field)) {
+        $fieldPath = $field->getOption('field');
+        if (is_array($fieldPath)) {
             $match = new Query\MultiMatch();
-            $match->setFields($field);
+            $match->setFields($fieldPath);
             $match->setQuery($data);
-            $match->setOperator($this->getOption('operator'));
-            $match->setParam('lenient', $this->getOption('lenient'));
+            $match->setOperator($field->getOption('operator'));
+            $match->setParam('lenient', $field->getOption('lenient'));
         } else {
             $match = new Query\MatchQuery();
-            $match->setFieldQuery($field, $data);
-            $match->setFieldOperator($field, $this->getOption('operator'));
+            $match->setFieldQuery($fieldPath, $data);
+            $match->setFieldOperator($fieldPath, $field->getOption('operator'));
         }
 
         $query->addMust($match);
     }
 
-    public function getType()
+    public function getId(): string
     {
         return 'text';
     }
 
-    public function initOptions()
+    public function initOptions(OptionsResolver $optionsResolver): void
     {
-        parent::initOptions();
+        parent::initOptions($optionsResolver);
 
-        $this->getOptionsResolver()
+        $optionsResolver
+            ->setAllowedValues('comparison', ['match'])
             ->setDefaults(['operator' => 'or'])
             ->setAllowedTypes('field', ['array', 'string', 'null'])
             ->setAllowedValues('operator', ['or', 'and'])
